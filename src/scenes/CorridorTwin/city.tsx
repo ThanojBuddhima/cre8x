@@ -669,6 +669,8 @@ function UserMarker({
   position: { x: number; y: number; z: number }
   color: string
 }) {
+  const waitingState = useSynqStore((s) => s.waitingState)
+  
   return (
     <group position={[position.x, position.y, position.z]}>
       <mesh>
@@ -686,7 +688,16 @@ function UserMarker({
         zIndexRange={[20, 0]}
         pointerEvents="none"
       >
-        <div className="map-label">You are here</div>
+        <div className="map-label whitespace-nowrap">
+          {waitingState?.isWaiting ? (
+            <span className="flex items-center gap-1.5 font-bold text-accent">
+              <span className="inline-block h-1.5 w-1.5 animate-ping rounded-full bg-accent" />
+              {waitingState.label} is almost here... arriving in {waitingState.countdown} min
+            </span>
+          ) : (
+            'You are here'
+          )}
+        </div>
       </Html>
     </group>
   )

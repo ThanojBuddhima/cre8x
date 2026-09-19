@@ -30,16 +30,24 @@ export function QualityGate({ variant, journey, progress = 0 }: QualityGateProps
   const calmMode = useSynqStore((s) => s.calmMode)
   const fallback = <FallbackSchematic journey={journey} progress={progress} />
 
-  const scene =
-    calmMode || quality === 'FALLBACK' ? (
-      fallback
-    ) : (
-      <WebGLGuard fallback={fallback}>
-        <Suspense fallback={fallback}>
-          <CanvasRoot variant={variant} journey={journey} progress={progress} />
-        </Suspense>
-      </WebGLGuard>
-    )
+  const isSimple = calmMode || quality === 'FALLBACK'
 
-  return <div className="relative h-full w-full">{scene}</div>
+  return (
+    <div className="relative h-full w-full">
+      <div 
+        className={`absolute inset-0 transition-opacity duration-500 ${isSimple ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+      >
+        <WebGLGuard fallback={fallback}>
+          <Suspense fallback={fallback}>
+            <CanvasRoot variant={variant} journey={journey} progress={progress} />
+          </Suspense>
+        </WebGLGuard>
+      </div>
+      <div 
+        className={`absolute inset-0 transition-opacity duration-500 ${isSimple ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+      >
+        <FallbackSchematic journey={journey} progress={progress} />
+      </div>
+    </div>
+  )
 }

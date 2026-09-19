@@ -42,6 +42,7 @@ export interface SynqState {
   mapCommand: MapCommand | null
   schematicZoom: number
   schematicOffset: { x: number; y: number }
+  waitingState: { isWaiting: boolean; countdown: number; label: string } | null
   setIntent: (partial: Partial<Intent>) => void
   setProfile: (partial: Partial<AccessibilityProfile>) => void
   setResults: (results: Journey[]) => void
@@ -63,6 +64,7 @@ export interface SynqState {
   issueMapCommand: (type: MapCommandType) => void
   setSchematicZoom: (value: number) => void
   setSchematicOffset: (value: { x: number; y: number }) => void
+  setWaitingState: (value: { isWaiting: boolean; countdown: number; label: string } | null) => void
   resetLive: () => void
   replayIntro: () => void
 }
@@ -107,6 +109,7 @@ export const useSynqStore = create<SynqState>((set) => ({
   mapCommand: null,
   schematicZoom: 1,
   schematicOffset: { x: 0, y: 0 },
+  waitingState: null,
   setIntent: (partial) =>
     set((state) => ({ intent: { ...state.intent, ...partial } })),
   setProfile: (partial) =>
@@ -142,6 +145,7 @@ export const useSynqStore = create<SynqState>((set) => ({
     })),
   setSchematicZoom: (schematicZoom) => set({ schematicZoom }),
   setSchematicOffset: (schematicOffset) => set({ schematicOffset }),
+  setWaitingState: (waitingState) => set({ waitingState }),
   resetLive: () =>
     set((state) => ({
       liveProgress: 0,

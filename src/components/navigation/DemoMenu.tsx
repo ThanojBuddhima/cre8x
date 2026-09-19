@@ -14,8 +14,6 @@ export function DemoMenu() {
   const [open, setOpen] = useState(false)
   const scenario = useSynqStore((s) => s.scenario)
   const setScenario = useSynqStore((s) => s.setScenario)
-  const calmMode = useSynqStore((s) => s.calmMode)
-  const setCalmMode = useSynqStore((s) => s.setCalmMode)
 
   return (
     <>
@@ -39,8 +37,11 @@ export function DemoMenu() {
               <button
                 key={item.id}
                 type="button"
-                onClick={() => setScenario(item.id)}
-                className={`flex h-12 items-center gap-3 rounded-md border px-3 text-left text-sm ${
+                onClick={() => {
+                  setScenario(item.id)
+                  setOpen(false)
+                }}
+                className={`pointer-events-auto flex h-12 items-center gap-3 rounded-md border px-3 text-left text-sm ${
                   scenario === item.id
                     ? 'border-accent bg-accent-dim text-accent'
                     : 'border-hairline text-paper'
@@ -52,15 +53,6 @@ export function DemoMenu() {
             )
           })}
         </div>
-        <label className="mt-5 flex min-h-11 items-center justify-between gap-3 text-sm">
-          <span>Calm mode · larger type, no 3D</span>
-          <input
-            type="checkbox"
-            checked={calmMode}
-            onChange={(event) => setCalmMode(event.target.checked)}
-            className="size-5 accent-accent"
-          />
-        </label>
       </Sheet>
     </>
   )

@@ -34,6 +34,7 @@ export function FallbackSchematic({
   const scenario = useSynqStore((s) => s.scenario)
   const layers = useSynqStore((s) => s.layers)
   const theme = useSynqStore((s) => s.theme)
+  const waitingState = useSynqStore((s) => s.waitingState)
   const mapCommand = useSynqStore((s) => s.mapCommand)
   const zoom = useSynqStore((s) => s.schematicZoom)
   const offset = useSynqStore((s) => s.schematicOffset)
@@ -230,17 +231,36 @@ export function FallbackSchematic({
             </text>
           </g>
         ))}
-        <circle cx={user.x} cy={user.y} r="7" fill={youColor} />
-        <text
-          x={user.x + 10}
-          y={user.y - 8}
-          fill={youColor}
-          fontSize="9"
-          fontWeight="700"
-          fontFamily="inherit"
-        >
-          You are here
-        </text>
+        {waitingState?.isWaiting ? (
+          <g>
+            <circle cx={user.x} cy={user.y} r="5" fill="#e8b86d" className="animate-ping" style={{ transformOrigin: `${user.x}px ${user.y}px` }} />
+            <circle cx={user.x} cy={user.y} r="5" fill="#e8b86d" />
+            <text
+              x={user.x + 12}
+              y={user.y - 8}
+              fill="#e8b86d"
+              fontSize="9"
+              fontWeight="700"
+              fontFamily="inherit"
+            >
+              {waitingState.label} is almost here... arriving in {waitingState.countdown} min
+            </text>
+          </g>
+        ) : (
+          <g>
+            <circle cx={user.x} cy={user.y} r="7" fill={youColor} />
+            <text
+              x={user.x + 10}
+              y={user.y - 8}
+              fill={youColor}
+              fontSize="9"
+              fontWeight="700"
+              fontFamily="inherit"
+            >
+              You are here
+            </text>
+          </g>
+        )}
       </svg>
     </div>
   )

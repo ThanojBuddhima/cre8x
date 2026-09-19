@@ -9,5 +9,7 @@ export function useSelectedJourney(): Journey | undefined {
 }
 
 export function usePrefersReducedMotion() {
-  return useSynqStore((s) => s.calmMode) || useSynqStore((s) => s.quality === 'FALLBACK')
+  const calmMode = useSynqStore((s) => s.calmMode)
+  const quality = useSynqStore((s) => s.quality)
+  return calmMode || quality === 'FALLBACK'
 }

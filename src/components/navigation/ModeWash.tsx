@@ -14,7 +14,7 @@ export function ModeWash() {
       return
     }
     setWash({ key: Date.now(), color })
-    const timer = window.setTimeout(() => setWash(null), 760)
+    const timer = window.setTimeout(() => setWash(null), 1550)
     return () => window.clearTimeout(timer)
   }, [mode, color])
 

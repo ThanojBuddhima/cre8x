@@ -17,7 +17,7 @@ export function Sheet({ open, onOpenChange, title, children }: SheetProps) {
         <Dialog.Overlay className="fixed inset-0 z-40 bg-ink/60" />
         <Dialog.Content
           className={cn(
-            'glass fixed inset-x-0 bottom-0 z-50 max-h-[88dvh] overflow-y-auto rounded-t-xl p-5 md:inset-auto md:top-1/2 md:left-1/2 md:w-[420px] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-xl',
+            'glass pointer-events-auto fixed inset-x-0 bottom-0 z-50 max-h-[88dvh] overflow-y-auto rounded-t-xl p-5 md:inset-auto md:top-1/2 md:left-1/2 md:w-[420px] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-xl',
           )}
         >
           <div className="mb-4 flex items-center justify-between">

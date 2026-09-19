@@ -13,6 +13,8 @@ export function LiveTracking() {
   const { id = 'j1' } = useParams()
   const selectJourney = useSynqStore((s) => s.selectJourney)
   const { journey, progress, arrived } = useLiveJourney()
+  const calmMode = useSynqStore((s) => s.calmMode)
+  const setCalmMode = useSynqStore((s) => s.setCalmMode)
 
   useEffect(() => {
     if (!useSynqStore.getState().selectedJourneyId) {
@@ -38,6 +40,26 @@ export function LiveTracking() {
           >
             <LocationChip journey={journey} progress={progress} />
             <LayerToggles />
+            <button
+              type="button"
+              role="switch"
+              aria-checked={calmMode}
+              onClick={() => setCalmMode(!calmMode)}
+              className="pointer-events-auto glass flex w-full max-w-[280px] items-center justify-between gap-3 rounded-xl px-4 py-3 text-sm text-paper cursor-pointer text-left"
+            >
+              <span>Calm mode · larger type, no 3D</span>
+              <div
+                className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors duration-200 ease-in-out ${
+                  calmMode ? 'bg-accent' : 'bg-muted/30'
+                }`}
+              >
+                <span
+                  className={`inline-block size-4 transform rounded-full bg-paper transition duration-200 ease-in-out ${
+                    calmMode ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+                />
+              </div>
+            </button>
             <Inspector />
           </div>
           <div

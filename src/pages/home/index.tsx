@@ -1,49 +1,25 @@
 import { useState } from 'react'
-import { CityStatusChip } from '@/components/city/CityStatusChip'
-import { LocationChip } from '@/components/city/LocationChip'
-import { MapControls } from '@/components/city/MapControls'
 import { IntentCard } from '@/components/journey/IntentCard'
 import { JourneyList } from '@/components/journey/JourneyList'
-import { QualityGate } from '@/components/3d/map/QualityGate'
-import { BottomSheet } from '@/components/navigation/BottomSheet'
-import { MapSplitLayout } from '@/components/navigation/MapSplitLayout'
+import { QuickJourneyCard } from '@/components/journey/QuickJourneyCard'
 import { getPlace } from '@/data/places'
-import { useMediaQuery } from '@/lib/useMediaQuery'
 import { useSynqStore } from '@/store/useSynqStore'
 
 export function LandingHome() {
   const intent = useSynqStore((s) => s.intent)
-  const desktop = useMediaQuery('(min-width: 768px)')
   const [planned, setPlanned] = useState(false)
-  const [expanded, setExpanded] = useState(desktop)
-  const sheetExpanded = expanded || planned || desktop
 
   return (
-    <MapSplitLayout
-      map={<QualityGate variant="ambient" />}
-      overlay={
-        <>
-          <div
-            className="absolute inset-x-3 flex items-start justify-between gap-2 md:left-8 md:right-8"
-            style={{ top: 'calc(6.25rem + env(safe-area-inset-top))' }}
-          >
-            <div className="min-w-0">
-              <LocationChip />
-            </div>
-            <CityStatusChip />
-          </div>
-          <div
-            className="pointer-events-none absolute right-3 md:right-6"
-            style={{ bottom: 'calc(var(--dock-h) + 12px)' }}
-          >
-            <MapControls className="relative" />
-          </div>
-        </>
-      }
-      sheet={
-        <BottomSheet expanded={sheetExpanded} onExpandedChange={setExpanded}>
-          {planned ? (
-            <>
+    <main
+      id="main"
+      className="relative min-h-dvh overflow-y-auto overflow-x-hidden bg-ink pt-[calc(6.25rem+env(safe-area-inset-top))] pb-[calc(var(--dock-h)+32px)]"
+    >
+      <div className="mx-auto w-full max-w-lg px-4 md:px-6">
+        <QuickJourneyCard />
+        
+        {planned ? (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="glass rounded-2xl p-5 mb-6">
               <p className="text-sm font-medium text-muted">Your options</p>
               <h1 className="mt-1 font-serif text-2xl text-paper">
                 {getPlace(intent.originId).shortName} to{' '}
@@ -51,30 +27,24 @@ export function LandingHome() {
               </h1>
               <button
                 type="button"
-                className="mt-1 h-11 text-left text-sm text-accent"
-                onClick={() => {
-                  setPlanned(false)
-                  setExpanded(true)
-                }}
+                className="mt-2 text-sm font-medium text-accent transition-colors hover:text-paper"
+                onClick={() => setPlanned(false)}
               >
                 Edit trip
               </button>
-              <div className="mt-4">
-                <JourneyList />
-              </div>
-            </>
-          ) : (
+            </div>
+            <JourneyList />
+          </div>
+        ) : (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             <IntentCard
-              compact={!sheetExpanded}
-              onExpand={() => setExpanded(true)}
-              onPlanned={() => {
-                setPlanned(true)
-                setExpanded(true)
-              }}
+              compact={false}
+              onExpand={() => {}}
+              onPlanned={() => setPlanned(true)}
             />
-          )}
-        </BottomSheet>
-      }
-    />
+          </div>
+        )}
+      </div>
+    </main>
   )
 }

@@ -4,10 +4,19 @@ import { BottomDock } from '@/components/navigation/BottomDock'
 import { DemoMenu } from '@/components/navigation/DemoMenu'
 import { ModeTag } from '@/components/navigation/ModeTag'
 import { ModeWash } from '@/components/navigation/ModeWash'
+import { useLiveJourney } from '@/hooks/useLiveJourney'
 
 export function AppShell() {
+  const { progress, color } = useLiveJourney()
+
   return (
     <div className="relative min-h-dvh overflow-x-hidden bg-ink text-paper">
+      <div className="fixed inset-x-0 top-0 z-50 h-1.5 bg-surface/30">
+        <div
+          className="h-full transition-all duration-500 ease-out"
+          style={{ width: `${Math.round(progress * 100)}%`, backgroundColor: color }}
+        />
+      </div>
       <a href="#main" className="skip-link">
         Skip to journey planner
       </a>
