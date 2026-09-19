@@ -7,6 +7,8 @@ export type EnergyLevel = 'Low' | 'Medium' | 'High'
 export type WeatherRisk = 'Low' | 'Medium' | 'High'
 export type LayerId = 'ground' | 'rail' | 'air' | 'risk'
 export type TimeMode = 'arrive' | 'leave'
+export type ThemeMode = 'light' | 'dark'
+export type MapCommandType = 'zoom-in' | 'zoom-out' | 'recenter'
 
 export interface Place {
   id: string
@@ -92,4 +94,9 @@ export interface InspectorTarget {
   kind: 'vehicle' | 'corridor'
   title: string
   lines: string[]
+}
+
+export interface MapCommand {
+  id: number
+  type: MapCommandType
 }

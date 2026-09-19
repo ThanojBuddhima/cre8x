@@ -16,10 +16,12 @@ export default function CanvasRoot({
 }: CanvasRootProps) {
   const quality = useSynqStore((s) => s.quality)
   const calmMode = useSynqStore((s) => s.calmMode)
+  const theme = useSynqStore((s) => s.theme)
   const frozen = calmMode
+  const sky = theme === 'light' ? '#e8eef2' : '#070b10'
 
   return (
-    <div className="absolute inset-0" aria-hidden="true">
+    <div className="absolute inset-0">
       <Canvas
         dpr={quality === 'HIGH' ? [1, 1.5] : 1}
         gl={{
@@ -30,8 +32,8 @@ export default function CanvasRoot({
         camera={{ position: [32, 24, -22], fov: 42, near: 0.1, far: 240 }}
         frameloop={frozen ? 'demand' : 'always'}
       >
-        <color attach="background" args={['#070b10']} />
-        <fog attach="fog" args={['#070b10', 40, 140]} />
+        <color attach="background" args={[sky]} />
+        <fog attach="fog" args={[sky, 50, 150]} />
         <CorridorTwin
           variant={variant}
           journey={journey}

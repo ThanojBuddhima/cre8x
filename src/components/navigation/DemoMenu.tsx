@@ -19,6 +19,8 @@ export function DemoMenu() {
   const setScenario = useSynqStore((s) => s.setScenario)
   const calmMode = useSynqStore((s) => s.calmMode)
   const setCalmMode = useSynqStore((s) => s.setCalmMode)
+  const theme = useSynqStore((s) => s.theme)
+  const setTheme = useSynqStore((s) => s.setTheme)
   const replayIntro = useSynqStore((s) => s.replayIntro)
 
   return (
@@ -57,6 +59,17 @@ export function DemoMenu() {
           })}
         </div>
         <label className="mt-5 flex min-h-11 items-center justify-between gap-3 text-sm">
+          <span>Light mode</span>
+          <input
+            type="checkbox"
+            checked={theme === 'light'}
+            onChange={(event) =>
+              setTheme(event.target.checked ? 'light' : 'dark')
+            }
+            className="size-5 accent-accent"
+          />
+        </label>
+        <label className="mt-2 flex min-h-11 items-center justify-between gap-3 text-sm">
           <span>Calm mode · larger type, no 3D</span>
           <input
             type="checkbox"

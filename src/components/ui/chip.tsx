@@ -13,7 +13,7 @@ export function Chip({ selected, className, ...props }: ChipProps) {
         'h-11 rounded-full border px-4 text-sm transition-colors duration-[var(--dur-micro)]',
         selected
           ? 'border-accent bg-accent-dim text-accent'
-          : 'border-hairline bg-surface text-muted hover:text-paper',
+          : 'border-hairline bg-surface-2 text-paper hover:border-accent/40',
         className,
       )}
       aria-pressed={selected}

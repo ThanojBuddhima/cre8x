@@ -14,7 +14,7 @@ export function LayerToggles() {
 
   return (
     <div
-      className="pointer-events-auto glass flex flex-wrap gap-1 rounded-full p-1"
+      className="pointer-events-auto glass flex max-w-full flex-wrap gap-1 rounded-full p-1"
       role="group"
       aria-label="Transportation layers"
     >

@@ -6,9 +6,18 @@ import type {
   Intent,
   Journey,
   LayerId,
+  MapCommand,
+  MapCommandType,
   QualityLevel,
+  ThemeMode,
 } from '@/types'
 import { detectQuality, prefersReducedMotion } from '@/services/quality'
+
+function readTheme(): ThemeMode {
+  if (typeof window === 'undefined') return 'light'
+  const saved = window.localStorage.getItem('synq-theme')
+  return saved === 'dark' ? 'dark' : 'light'
+}
 
 export interface SynqState {
   intent: Intent
@@ -22,10 +31,16 @@ export interface SynqState {
   layers: Record<LayerId, boolean>
   quality: QualityLevel
   calmMode: boolean
+  theme: ThemeMode
   introComplete: boolean
   introProgress: number
   inspector: InspectorTarget | null
   arrived: boolean
+  followUser: boolean
+  autoRotate: boolean
+  mapCommand: MapCommand | null
+  schematicZoom: number
+  schematicOffset: { x: number; y: number }
   setIntent: (partial: Partial<Intent>) => void
   setProfile: (partial: Partial<AccessibilityProfile>) => void
   setResults: (results: Journey[]) => void
@@ -37,10 +52,16 @@ export interface SynqState {
   toggleLayer: (id: LayerId) => void
   setQuality: (quality: QualityLevel) => void
   setCalmMode: (value: boolean) => void
+  setTheme: (theme: ThemeMode) => void
   setIntroComplete: (value: boolean) => void
   setIntroProgress: (value: number) => void
   setInspector: (value: InspectorTarget | null) => void
   setArrived: (value: boolean) => void
+  setFollowUser: (value: boolean) => void
+  setAutoRotate: (value: boolean) => void
+  issueMapCommand: (type: MapCommandType) => void
+  setSchematicZoom: (value: number) => void
+  setSchematicOffset: (value: { x: number; y: number }) => void
   resetLive: () => void
   replayIntro: () => void
 }
@@ -74,10 +95,16 @@ export const useSynqStore = create<SynqState>((set) => ({
   },
   quality: detectQuality(),
   calmMode: reduced,
+  theme: readTheme(),
   introComplete: reduced,
   introProgress: 0,
   inspector: null,
   arrived: false,
+  followUser: true,
+  autoRotate: true,
+  mapCommand: null,
+  schematicZoom: 1,
+  schematicOffset: { x: 0, y: 0 },
   setIntent: (partial) =>
     set((state) => ({ intent: { ...state.intent, ...partial } })),
   setProfile: (partial) =>
@@ -96,10 +123,23 @@ export const useSynqStore = create<SynqState>((set) => ({
       calmMode,
       quality: calmMode ? 'FALLBACK' : detectQuality(),
     }),
+  setTheme: (theme) => {
+    window.localStorage.setItem('synq-theme', theme)
+    set({ theme })
+  },
   setIntroComplete: (introComplete) => set({ introComplete }),
   setIntroProgress: (introProgress) => set({ introProgress }),
   setInspector: (inspector) => set({ inspector }),
   setArrived: (arrived) => set({ arrived }),
+  setFollowUser: (followUser) => set({ followUser }),
+  setAutoRotate: (autoRotate) => set({ autoRotate }),
+  issueMapCommand: (type) =>
+    set((state) => ({
+      mapCommand: { id: (state.mapCommand?.id ?? 0) + 1, type },
+      followUser: type === 'recenter' ? true : state.followUser,
+    })),
+  setSchematicZoom: (schematicZoom) => set({ schematicZoom }),
+  setSchematicOffset: (schematicOffset) => set({ schematicOffset }),
   resetLive: () =>
     set({
       liveProgress: 0,
@@ -107,11 +147,15 @@ export const useSynqStore = create<SynqState>((set) => ({
       acceptedReroute: false,
       arrived: false,
       inspector: null,
+      followUser: true,
+      schematicZoom: 1,
+      schematicOffset: { x: 0, y: 0 },
     }),
   replayIntro: () =>
     set({
       introComplete: false,
       introProgress: 0,
       results: [],
+      autoRotate: true,
     }),
 }))

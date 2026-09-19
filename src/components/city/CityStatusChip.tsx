@@ -11,7 +11,7 @@ export function CityStatusChip() {
     <div className="pointer-events-auto">
       <button
         type="button"
-        className="glass flex min-h-11 items-center gap-2 rounded-full px-4 text-left text-sm"
+        className="glass flex min-h-11 shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-3 text-left text-xs md:px-4 md:text-sm"
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
       >

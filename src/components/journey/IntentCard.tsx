@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { ProfileSheet } from '@/components/accessibility/ProfileSheet'
 import { Button } from '@/components/ui/button'
 import { Chip } from '@/components/ui/chip'
-import { GlassCard } from '@/components/ui/glass-card'
 import { Input } from '@/components/ui/input'
 import { places } from '@/data/places'
 import { cn } from '@/lib/cn'
@@ -10,18 +9,36 @@ import { planJourneys } from '@/services/mobilityIntelligence'
 import { useSynqStore } from '@/store/useSynqStore'
 import type { Preference } from '@/types'
 
-const preferences: { id: Preference; label: string }[] = [
-  { id: 'fastest', label: 'Fastest' },
-  { id: 'calm', label: 'Calm' },
-  { id: 'accessible', label: 'Accessible' },
-  { id: 'energy', label: 'Low energy' },
+const preferences: { id: Preference; label: string; hint: string }[] = [
+  {
+    id: 'fastest',
+    label: 'Fastest',
+    hint: 'Fastest = more air, higher energy.',
+  },
+  {
+    id: 'calm',
+    label: 'Calm',
+    hint: 'Calm = fewer transfers, no flying unless needed.',
+  },
+  {
+    id: 'accessible',
+    label: 'Accessible',
+    hint: 'Accessible = 0 stairs and level boarding.',
+  },
+  {
+    id: 'energy',
+    label: 'Low energy',
+    hint: 'Low energy = rail first, less air.',
+  },
 ]
 
 interface IntentCardProps {
   onPlanned: () => void
+  compact?: boolean
+  onExpand?: () => void
 }
 
-export function IntentCard({ onPlanned }: IntentCardProps) {
+export function IntentCard({ onPlanned, compact = false, onExpand }: IntentCardProps) {
   const intent = useSynqStore((s) => s.intent)
   const setIntent = useSynqStore((s) => s.setIntent)
   const profile = useSynqStore((s) => s.profile)
@@ -36,6 +53,8 @@ export function IntentCard({ onPlanned }: IntentCardProps) {
   const matches = places.filter((place) =>
     place.name.toLowerCase().includes(query.toLowerCase()),
   )
+  const hint =
+    preferences.find((item) => item.id === intent.preference)?.hint ?? ''
 
   async function plan() {
     setBusy(true)
@@ -54,21 +73,46 @@ export function IntentCard({ onPlanned }: IntentCardProps) {
     onPlanned()
   }
 
+  const summary = `${origin?.shortName ?? 'From'} to ${destination?.shortName ?? 'where?'} · ${
+    intent.timeMode === 'arrive' ? 'arrive' : 'leave'
+  } ${intent.arriveBy}`
+
   return (
-    <GlassCard className="pointer-events-auto w-full max-w-md">
-      <p className="text-xs tracking-[0.2em] text-dim">SYNQ INTELLIGENCE</p>
-      <h1 className="mt-2 font-serif text-3xl leading-tight text-paper">
+    <div className="pointer-events-auto w-full">
+      <h1
+        className={cn(
+          'font-serif leading-tight text-paper',
+          compact ? 'text-xl' : 'text-2xl md:text-4xl',
+        )}
+      >
         Where do you need to go?
       </h1>
-      <p className="mt-2 text-sm text-muted">
-        Say the place and the time. The city coordinates the rest.
-      </p>
+      <p className="mt-1 text-sm text-muted">{summary}</p>
 
-      <div className="mt-5 grid gap-3">
-        <label className="grid gap-1 text-xs text-dim">
+      {compact ? (
+        <div className="mt-4 grid gap-1">
+          <Button
+            size="lg"
+            className="w-full"
+            disabled={busy || !intent.destinationId}
+            onClick={() => void plan()}
+          >
+            {busy ? 'Finding a way…' : 'Plan my journey'}
+          </Button>
+          <button
+            type="button"
+            className="h-11 text-left text-sm text-accent"
+            onClick={onExpand}
+          >
+            Change places or time
+          </button>
+        </div>
+      ) : (
+      <div className="mt-4 grid gap-3">
+        <label className="grid gap-1 text-sm font-medium text-paper">
           From
           <select
-            className="h-11 rounded-md border border-hairline bg-surface px-3 text-sm text-paper"
+            className="h-11 rounded-md border border-hairline bg-surface px-3 text-base text-paper"
             value={intent.originId}
             onChange={(event) => setIntent({ originId: event.target.value })}
           >
@@ -80,7 +124,7 @@ export function IntentCard({ onPlanned }: IntentCardProps) {
           </select>
         </label>
 
-        <label className="grid gap-1 text-xs text-dim">
+        <label className="grid gap-1 text-sm font-medium text-paper">
           To
           <Input
             value={query || destination?.name || ''}
@@ -114,7 +158,7 @@ export function IntentCard({ onPlanned }: IntentCardProps) {
             <button
               type="button"
               className={cn(
-                'h-9 flex-1 rounded-full text-xs',
+                'h-11 flex-1 rounded-full text-sm',
                 intent.timeMode === 'arrive'
                   ? 'bg-accent-dim text-accent'
                   : 'text-muted',
@@ -126,7 +170,7 @@ export function IntentCard({ onPlanned }: IntentCardProps) {
             <button
               type="button"
               className={cn(
-                'h-9 flex-1 rounded-full text-xs',
+                'h-11 flex-1 rounded-full text-sm',
                 intent.timeMode === 'leave'
                   ? 'bg-accent-dim text-accent'
                   : 'text-muted',
@@ -144,7 +188,7 @@ export function IntentCard({ onPlanned }: IntentCardProps) {
           />
         </div>
 
-        <p className="text-xs text-dim">What matters</p>
+        <p className="text-sm font-medium text-paper">What matters</p>
         <div className="flex flex-wrap gap-2">
           {preferences.map((item) => (
             <Chip
@@ -156,24 +200,19 @@ export function IntentCard({ onPlanned }: IntentCardProps) {
             </Chip>
           ))}
         </div>
-
+        <p className="text-sm text-muted">{hint}</p>
         <ProfileSheet />
 
         <Button
           size="lg"
-          className="mt-1 w-full"
+          className="w-full"
           disabled={busy || !intent.destinationId}
           onClick={() => void plan()}
         >
           {busy ? 'Finding a way…' : 'Plan my journey'}
         </Button>
-        {origin && destination ? (
-          <p className="text-xs text-dim">
-            {origin.shortName} → {destination.shortName} · {intent.timeMode}{' '}
-            {intent.arriveBy}
-          </p>
-        ) : null}
       </div>
-    </GlassCard>
+      )}
+    </div>
   )
 }

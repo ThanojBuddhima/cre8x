@@ -32,12 +32,12 @@ export function LiveHud({
 
   return (
     <div className="pointer-events-auto glass max-w-sm rounded-lg p-4">
-      <p className="text-xs tracking-[0.16em] text-dim">NOW</p>
+      <p className="text-xs font-medium tracking-[0.12em] text-dim">YOU ARE HERE</p>
       <p className="mt-1 text-lg font-medium">
-        {modeLabel(now.mode)} · {now.vehicleName}
+        {from.shortName} · {modeLabel(now.mode)}
       </p>
       <p className="text-sm text-muted">
-        {from.shortName} · {remaining} min remaining
+        {now.vehicleName} · {remaining} min remaining
       </p>
       <p className="mt-3 h-1 overflow-hidden rounded-full bg-surface">
         <span

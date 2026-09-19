@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { getPlace } from '@/data/places'
 import { currentLeg } from '@/components/live/LiveHud'
 import { useSynqStore } from '@/store/useSynqStore'
@@ -11,7 +12,7 @@ const hubs = [
 ]
 
 function pointFor(id: string, mode: string) {
-  const hub = hubs.find((item) => item.id === id) ?? hubs[0]
+  const hub = hubs.find((item) => item.id === id) ?? hubs[0]!
   if (mode === 'rail') return { x: hub.x, y: hub.y - 10 }
   if (mode === 'air') return { x: hub.x, y: hub.y - 28 }
   if (mode === 'pod') return { x: hub.x, y: hub.y + 12 }
@@ -31,9 +32,17 @@ export function FallbackSchematic({
 }) {
   const scenario = useSynqStore((s) => s.scenario)
   const layers = useSynqStore((s) => s.layers)
+  const theme = useSynqStore((s) => s.theme)
+  const mapCommand = useSynqStore((s) => s.mapCommand)
+  const zoom = useSynqStore((s) => s.schematicZoom)
+  const offset = useSynqStore((s) => s.schematicOffset)
+  const setSchematicZoom = useSynqStore((s) => s.setSchematicZoom)
+  const setSchematicOffset = useSynqStore((s) => s.setSchematicOffset)
+  const drag = useRef<{ x: number; y: number } | null>(null)
+  const light = theme === 'light'
   const leg = journey ? currentLeg(journey, progress) : undefined
-  const from = leg ? pointFor(leg.fromId, leg.mode) : hubs[0]
-  const to = leg ? pointFor(leg.toId, leg.mode) : hubs[hubs.length - 1]
+  const from = leg ? pointFor(leg.fromId, leg.mode) : hubs[0]!
+  const to = leg ? pointFor(leg.toId, leg.mode) : hubs[hubs.length - 1]!
   const total = journey?.legs.reduce((s, l) => s + l.durationMin, 0) ?? 1
   const local = journey
     ? ((progress * total) % (leg?.durationMin || 1)) / (leg?.durationMin || 1)
@@ -43,29 +52,74 @@ export function FallbackSchematic({
     y: lerp(from.y, to.y, Math.min(1, local)),
   }
 
+  useEffect(() => {
+    if (!mapCommand) return
+    if (mapCommand.type === 'zoom-in') {
+      setSchematicZoom(Math.min(2.4, zoom * 1.25))
+    }
+    if (mapCommand.type === 'zoom-out') {
+      setSchematicZoom(Math.max(0.7, zoom / 1.25))
+    }
+    if (mapCommand.type === 'recenter') {
+      setSchematicZoom(1)
+      setSchematicOffset({ x: 0, y: 0 })
+    }
+  }, [mapCommand, setSchematicOffset, setSchematicZoom, zoom])
+
   return (
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,#12202c,transparent_40%),linear-gradient(#070b10,#0a141c)]">
+    <div
+      className="absolute inset-0 touch-none"
+      style={{
+        background: light
+          ? 'linear-gradient(#e8eef2, #d7e3ea)'
+          : 'linear-gradient(#070b10, #0a141c)',
+      }}
+      onPointerDown={(event) => {
+        drag.current = { x: event.clientX, y: event.clientY }
+        event.currentTarget.setPointerCapture(event.pointerId)
+      }}
+      onPointerMove={(event) => {
+        if (!drag.current) return
+        setSchematicOffset({
+          x: offset.x + (event.clientX - drag.current.x),
+          y: offset.y + (event.clientY - drag.current.y),
+        })
+        drag.current = { x: event.clientX, y: event.clientY }
+      }}
+      onPointerUp={() => {
+        drag.current = null
+      }}
+      onWheel={(event) => {
+        event.preventDefault()
+        const next = event.deltaY < 0 ? zoom * 1.08 : zoom / 1.08
+        setSchematicZoom(Math.min(2.4, Math.max(0.7, next)))
+      }}
+    >
       <svg
         viewBox="0 0 320 200"
         className="h-full w-full"
         role="img"
         aria-label={
           journey
-            ? `Route from ${getPlace(journey.legs[0].fromId).name} to KDU`
-            : 'Colombo to KDU mobility corridor'
+            ? `You are on the route from ${getPlace(journey.legs[0].fromId).name} to KDU`
+            : 'Colombo to KDU map. You are at Fort.'
         }
+        style={{
+          transform: `translate(${offset.x}px, ${offset.y}px) scale(${zoom})`,
+          transformOrigin: 'center',
+        }}
       >
         <path
           d="M10 20 C 40 80, 30 140, 18 198"
           fill="none"
-          stroke="#123044"
+          stroke={light ? '#b9d0dc' : '#123044'}
           strokeWidth="28"
         />
         {layers.ground ? (
           <path
             d="M40 176 L 270 40"
             fill="none"
-            stroke={scenario === 'rain' ? '#8a6a3a' : '#2a3540'}
+            stroke={scenario === 'rain' ? '#c4a15a' : light ? '#9aa8b3' : '#2a3540'}
             strokeWidth="8"
             strokeLinecap="round"
           />
@@ -74,8 +128,8 @@ export function FallbackSchematic({
           <path
             d="M48 158 L 250 48"
             fill="none"
-            stroke="#3ee0c4"
-            strokeOpacity="0.55"
+            stroke={light ? '#0f8f7a' : '#3ee0c4'}
+            strokeOpacity={journey ? 0.35 : 0.7}
             strokeWidth="2"
           />
         ) : null}
@@ -83,10 +137,19 @@ export function FallbackSchematic({
           <path
             d="M70 120 L 230 28"
             fill="none"
-            stroke="#3ee0c4"
-            strokeOpacity="0.3"
+            stroke={light ? '#3a9bb5' : '#3ee0c4'}
+            strokeOpacity="0.35"
             strokeWidth="1.5"
             strokeDasharray="6 8"
+          />
+        ) : null}
+        {journey ? (
+          <path
+            d={`M${from.x} ${from.y} L ${to.x} ${to.y}`}
+            fill="none"
+            stroke={light ? '#0f8f7a' : '#3ee0c4'}
+            strokeWidth="5"
+            strokeLinecap="round"
           />
         ) : null}
         {layers.risk && scenario !== 'normal' ? (
@@ -101,19 +164,40 @@ export function FallbackSchematic({
         ) : null}
         {hubs.map((hub) => (
           <g key={hub.id}>
-            <circle cx={hub.x} cy={hub.y} r="4" fill="#f4f7fa" />
+            <circle
+              cx={hub.x}
+              cy={hub.y}
+              r="4"
+              fill={light ? '#1b2430' : '#f4f7fa'}
+            />
             <text
               x={hub.x + 8}
               y={hub.y + 4}
-              fill="#a8b3c0"
-              fontSize="8"
+              fill={light ? '#1b2430' : '#d5dde6'}
+              fontSize="9"
+              fontWeight="600"
               fontFamily="inherit"
             >
               {hub.label}
             </text>
           </g>
         ))}
-        <circle cx={user.x} cy={user.y} r="5" fill="#3ee0c4" />
+        <circle
+          cx={user.x}
+          cy={user.y}
+          r="7"
+          fill={light ? '#0a5c50' : '#3ee0c4'}
+        />
+        <text
+          x={user.x + 10}
+          y={user.y - 8}
+          fill={light ? '#0a5c50' : '#3ee0c4'}
+          fontSize="9"
+          fontWeight="700"
+          fontFamily="inherit"
+        >
+          You are here
+        </text>
       </svg>
     </div>
   )

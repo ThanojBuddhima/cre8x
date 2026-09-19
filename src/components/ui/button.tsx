@@ -9,13 +9,13 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          'bg-accent text-ink hover:brightness-110 active:scale-[0.98]',
+          'bg-accent text-on-accent hover:brightness-110 active:scale-[0.98]',
         secondary:
           'glass text-paper hover:bg-surface-2',
         ghost:
           'bg-transparent text-muted hover:text-paper hover:bg-surface',
         warning:
-          'bg-warning text-ink hover:brightness-110',
+          'bg-warning text-on-accent hover:brightness-110',
       },
       size: {
         md: 'h-11',

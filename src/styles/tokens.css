@@ -2,6 +2,47 @@
   --font-sans: "Geist Variable", "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
 
+  --color-ink: #f4f6f8;
+  --color-ink-2: #e8eef2;
+  --color-fog: #d5e3ea;
+  --color-paper: #1b2430;
+  --color-muted: #5b6673;
+  --color-dim: #7a8694;
+  --color-accent: #0f8f7a;
+  --color-accent-dim: color-mix(in srgb, #0f8f7a 16%, transparent);
+  --color-on-accent: #ffffff;
+  --color-warning: #b7791f;
+  --color-danger: #b44545;
+  --color-hairline: rgb(27 36 48 / 0.14);
+  --color-surface: rgb(255 255 255 / 0.78);
+  --color-surface-2: rgb(255 255 255 / 0.92);
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+
+  --shadow-glass: 0 10px 32px rgb(27 36 48 / 0.12);
+}
+
+:root {
+  --bg: #f4f6f8;
+  --glass-bg: rgb(255 255 255 / 0.84);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-micro: 150ms;
+  --dur-ui: 280ms;
+  --dur-cam: 800ms;
+  --touch: 44px;
+  --sheet-h: 42dvh;
+  --map-sky: #e8eef2;
+  --map-ground: #d5dde3;
+  --map-water: #b9d0dc;
+  --map-building: #8b9aa8;
+  --map-road: #c5ced6;
+  --map-you: #0a5c50;
+}
+
+html.dark {
   --color-ink: #070b10;
   --color-ink-2: #0c1219;
   --color-fog: #0a1824;
@@ -10,25 +51,23 @@
   --color-dim: #6b7785;
   --color-accent: #3ee0c4;
   --color-accent-dim: color-mix(in srgb, #3ee0c4 18%, transparent);
+  --color-on-accent: #070b10;
   --color-warning: #e8b86d;
   --color-danger: #c45c5c;
   --color-hairline: rgb(255 255 255 / 0.14);
   --color-surface: rgb(255 255 255 / 0.08);
   --color-surface-2: rgb(255 255 255 / 0.12);
-
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
-  --radius-xl: 32px;
-
   --shadow-glass: 0 12px 40px rgb(0 0 0 / 0.35);
-}
-
-:root {
   --bg: #070b10;
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --dur-micro: 150ms;
-  --dur-ui: 280ms;
-  --dur-cam: 800ms;
-  --touch: 44px;
+  --glass-bg: linear-gradient(
+    180deg,
+    rgb(255 255 255 / 0.1),
+    rgb(255 255 255 / 0.06)
+  );
+  --map-sky: #070b10;
+  --map-ground: #0b1218;
+  --map-water: #0a1824;
+  --map-building: #1b2733;
+  --map-road: #141c24;
+  --map-you: #3ee0c4;
 }

@@ -10,6 +10,7 @@ export function Providers({ children }: { children: ReactNode }) {
   const setIntroComplete = useSynqStore((s) => s.setIntroComplete)
   const setScenario = useSynqStore((s) => s.setScenario)
   const calmMode = useSynqStore((s) => s.calmMode)
+  const theme = useSynqStore((s) => s.theme)
   const [params] = useSearchParams()
 
   useEffect(() => {
@@ -26,6 +27,12 @@ export function Providers({ children }: { children: ReactNode }) {
   useEffect(() => {
     document.documentElement.classList.toggle('calm', calmMode)
   }, [calmMode])
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', theme === 'dark')
+    const meta = document.querySelector('meta[name="theme-color"]')
+    meta?.setAttribute('content', theme === 'dark' ? '#070B10' : '#F4F6F8')
+  }, [theme])
 
   useEffect(() => {
     const value = params.get('scenario')

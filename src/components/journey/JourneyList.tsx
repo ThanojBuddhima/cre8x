@@ -12,7 +12,7 @@ export function JourneyList() {
   if (!results.length) return null
 
   return (
-    <div className="pointer-events-auto grid w-full max-w-md gap-3">
+    <div className="pointer-events-auto grid w-full gap-3">
       {results.map((journey) => (
         <JourneyCard
           key={journey.id}
