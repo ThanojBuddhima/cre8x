@@ -1,22 +1,9 @@
 import { getPlace } from '@/data/places'
-import { modeLabel } from '@/lib/cn'
-import type { Journey, JourneyLeg } from '@/types'
+import { currentLeg, nextLeg } from '@/lib/journeyProgress'
+import { modeColor, modeShortLabel, trackingSentence, transferPrompt } from '@/lib/modeColors'
+import type { Journey } from '@/types'
 
-export function currentLeg(journey: Journey, progress: number): JourneyLeg {
-  const total = journey.legs.reduce((sum, leg) => sum + leg.durationMin, 0)
-  let elapsed = progress * total
-  for (const leg of journey.legs) {
-    if (elapsed <= leg.durationMin) return leg
-    elapsed -= leg.durationMin
-  }
-  return journey.legs[journey.legs.length - 1] ?? journey.legs[0]!
-}
-
-export function nextLeg(journey: Journey, progress: number) {
-  const current = currentLeg(journey, progress)
-  const index = journey.legs.findIndex((leg) => leg.id === current.id)
-  return journey.legs[index + 1]
-}
+export { currentLeg, currentLegIndex, nextLeg } from '@/lib/journeyProgress'
 
 export function LiveHud({
   journey,
@@ -29,28 +16,38 @@ export function LiveHud({
   const upcoming = nextLeg(journey, progress)
   const from = getPlace(now.fromId)
   const remaining = Math.max(1, Math.round((1 - progress) * journey.durationMin))
+  const nowColor = modeColor(now.mode, 'dark')
+  const nextColor = upcoming ? modeColor(upcoming.mode, 'dark') : nowColor
+  const nextPlace = upcoming ? getPlace(upcoming.fromId) : null
+  const plain = trackingSentence(now, upcoming, nextPlace?.shortName)
 
   return (
-    <div className="pointer-events-auto glass max-w-sm rounded-lg p-4">
+    <div className="pointer-events-auto glass w-full rounded-lg p-4 md:max-w-sm">
       <p className="text-xs font-medium tracking-[0.12em] text-dim">YOU ARE HERE</p>
       <p className="mt-1 text-lg font-medium">
-        {from.shortName} · {modeLabel(now.mode)}
+        {from.shortName} · {modeShortLabel(now.mode)}
       </p>
-      <p className="text-sm text-muted">
+      <p className="mt-2 text-sm leading-snug text-paper">{plain}</p>
+      <p className="mt-2 text-sm text-muted">
         {now.vehicleName} · {remaining} min remaining
       </p>
       <p className="mt-3 h-1 overflow-hidden rounded-full bg-surface">
         <span
-          className="block h-full bg-accent"
-          style={{ width: `${Math.round(progress * 100)}%` }}
+          className="block h-full"
+          style={{
+            width: `${Math.round(progress * 100)}%`,
+            background: nowColor,
+          }}
         />
       </p>
-      {upcoming ? (
-        <p className="mt-3 text-sm text-accent">
-          Next: {modeLabel(upcoming.mode)} · {upcoming.vehicleName}
+      {upcoming && nextPlace ? (
+        <p className="mt-3 text-sm font-medium" style={{ color: nextColor }}>
+          {transferPrompt(upcoming, nextPlace.shortName)}
         </p>
       ) : (
-        <p className="mt-3 text-sm text-accent">You are on the last walk to KDU.</p>
+        <p className="mt-3 text-sm" style={{ color: nowColor }}>
+          Last walk to campus. You do not need to read the map.
+        </p>
       )}
     </div>
   )

@@ -5,6 +5,7 @@ import { Chip } from '@/components/ui/chip'
 import { Input } from '@/components/ui/input'
 import { places } from '@/data/places'
 import { cn } from '@/lib/cn'
+import { MODE_LEGEND, modeColor } from '@/lib/modeColors'
 import { planJourneys } from '@/services/mobilityIntelligence'
 import { useSynqStore } from '@/store/useSynqStore'
 import type { Preference } from '@/types'
@@ -88,6 +89,28 @@ export function IntentCard({ onPlanned, compact = false, onExpand }: IntentCardP
         Where do you need to go?
       </h1>
       <p className="mt-1 text-sm text-muted">{summary}</p>
+      <div className="mt-3 grid grid-cols-2 gap-2">
+        {MODE_LEGEND.map((item) => (
+          <div
+            key={item.mode}
+            className="rounded-lg border border-hairline px-3 py-2"
+          >
+            <p
+              className="text-xs font-medium"
+              style={{ color: modeColor(item.mode, 'dark') }}
+            >
+              {item.label}
+            </p>
+            <p className="mt-0.5 text-[11px] leading-snug text-dim">{item.hint}</p>
+          </div>
+        ))}
+      </div>
+      {compact ? (
+        <p className="mt-3 text-xs leading-snug text-dim">
+          Search Fort to KDU. SYNQ builds a path across smart roads, rail, air,
+          and short walks.
+        </p>
+      ) : null}
 
       {compact ? (
         <div className="mt-4 grid gap-1">

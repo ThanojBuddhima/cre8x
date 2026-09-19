@@ -14,9 +14,9 @@ import type {
 import { detectQuality, prefersReducedMotion } from '@/services/quality'
 
 function readTheme(): ThemeMode {
-  if (typeof window === 'undefined') return 'light'
-  const saved = window.localStorage.getItem('synq-theme')
-  return saved === 'dark' ? 'dark' : 'light'
+  if (typeof window === 'undefined') return 'dark'
+  window.localStorage.setItem('synq-theme', 'dark')
+  return 'dark'
 }
 
 export interface SynqState {
@@ -25,6 +25,7 @@ export interface SynqState {
   results: Journey[]
   selectedJourneyId: string | null
   liveProgress: number
+  liveEpoch: number
   disruptionShown: boolean
   acceptedReroute: boolean
   scenario: DemoScenario
@@ -82,8 +83,9 @@ export const useSynqStore = create<SynqState>((set) => ({
     withChild: false,
   },
   results: [],
-  selectedJourneyId: null,
+  selectedJourneyId: 'j1',
   liveProgress: 0,
+  liveEpoch: 0,
   disruptionShown: false,
   acceptedReroute: false,
   scenario: 'normal',
@@ -96,7 +98,7 @@ export const useSynqStore = create<SynqState>((set) => ({
   quality: detectQuality(),
   calmMode: reduced,
   theme: readTheme(),
-  introComplete: reduced,
+  introComplete: true,
   introProgress: 0,
   inspector: null,
   arrived: false,
@@ -123,9 +125,9 @@ export const useSynqStore = create<SynqState>((set) => ({
       calmMode,
       quality: calmMode ? 'FALLBACK' : detectQuality(),
     }),
-  setTheme: (theme) => {
-    window.localStorage.setItem('synq-theme', theme)
-    set({ theme })
+  setTheme: (_theme) => {
+    window.localStorage.setItem('synq-theme', 'dark')
+    set({ theme: 'dark' })
   },
   setIntroComplete: (introComplete) => set({ introComplete }),
   setIntroProgress: (introProgress) => set({ introProgress }),
@@ -141,8 +143,9 @@ export const useSynqStore = create<SynqState>((set) => ({
   setSchematicZoom: (schematicZoom) => set({ schematicZoom }),
   setSchematicOffset: (schematicOffset) => set({ schematicOffset }),
   resetLive: () =>
-    set({
+    set((state) => ({
       liveProgress: 0,
+      liveEpoch: state.liveEpoch + 1,
       disruptionShown: false,
       acceptedReroute: false,
       arrived: false,
@@ -150,12 +153,11 @@ export const useSynqStore = create<SynqState>((set) => ({
       followUser: true,
       schematicZoom: 1,
       schematicOffset: { x: 0, y: 0 },
-    }),
+    })),
   replayIntro: () =>
     set({
-      introComplete: false,
-      introProgress: 0,
-      results: [],
+      introComplete: true,
+      introProgress: 1,
       autoRotate: true,
     }),
 }))

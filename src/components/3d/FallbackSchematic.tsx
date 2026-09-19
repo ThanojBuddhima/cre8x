@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react'
 import { getPlace } from '@/data/places'
-import { currentLeg } from '@/components/live/LiveHud'
+import { currentLeg, currentLegIndex } from '@/lib/journeyProgress'
+import { hopLabel, modeColor, transferColor } from '@/lib/modeColors'
 import { useSynqStore } from '@/store/useSynqStore'
-import type { Journey } from '@/types'
+import type { Journey, TransportMode } from '@/types'
 
 const hubs = [
   { id: 'fort', x: 36, y: 168, label: 'Fort' },
@@ -51,6 +52,9 @@ export function FallbackSchematic({
     x: lerp(from.x, to.x, Math.min(1, local)),
     y: lerp(from.y, to.y, Math.min(1, local)),
   }
+  const youColor = leg ? modeColor(leg.mode, theme) : modeColor('walk', theme)
+  const hopInk = transferColor(theme)
+  const currentIndex = journey ? currentLegIndex(journey, progress) : 0
 
   useEffect(() => {
     if (!mapCommand) return
@@ -72,7 +76,7 @@ export function FallbackSchematic({
       style={{
         background: light
           ? 'linear-gradient(#e8eef2, #d7e3ea)'
-          : 'linear-gradient(#070b10, #0a141c)',
+          : 'linear-gradient(#0b1219, #16202a)',
       }}
       onPointerDown={(event) => {
         drag.current = { x: event.clientX, y: event.clientY }
@@ -112,14 +116,17 @@ export function FallbackSchematic({
         <path
           d="M10 20 C 40 80, 30 140, 18 198"
           fill="none"
-          stroke={light ? '#b9d0dc' : '#123044'}
+          stroke={light ? '#b9d0dc' : '#173044'}
           strokeWidth="28"
         />
         {layers.ground ? (
           <path
             d="M40 176 L 270 40"
             fill="none"
-            stroke={scenario === 'rain' ? '#c4a15a' : light ? '#9aa8b3' : '#2a3540'}
+            stroke={
+              scenario === 'rain' ? '#c4a15a' : modeColor('pod', theme)
+            }
+            strokeOpacity={0.45}
             strokeWidth="8"
             strokeLinecap="round"
           />
@@ -128,7 +135,7 @@ export function FallbackSchematic({
           <path
             d="M48 158 L 250 48"
             fill="none"
-            stroke={light ? '#0f8f7a' : '#3ee0c4'}
+            stroke={modeColor('rail', theme)}
             strokeOpacity={journey ? 0.35 : 0.7}
             strokeWidth="2"
           />
@@ -137,21 +144,62 @@ export function FallbackSchematic({
           <path
             d="M70 120 L 230 28"
             fill="none"
-            stroke={light ? '#3a9bb5' : '#3ee0c4'}
-            strokeOpacity="0.35"
+            stroke={modeColor('air', theme)}
+            strokeOpacity="0.45"
             strokeWidth="1.5"
             strokeDasharray="6 8"
           />
         ) : null}
-        {journey ? (
-          <path
-            d={`M${from.x} ${from.y} L ${to.x} ${to.y}`}
-            fill="none"
-            stroke={light ? '#0f8f7a' : '#3ee0c4'}
-            strokeWidth="5"
-            strokeLinecap="round"
-          />
-        ) : null}
+        {journey
+          ? journey.legs.map((item) => {
+              const a = pointFor(item.fromId, item.mode)
+              const b = pointFor(item.toId, item.mode)
+              if (a.x === b.x && a.y === b.y) return null
+              return (
+                <path
+                  key={item.id}
+                  d={`M${a.x} ${a.y} L ${b.x} ${b.y}`}
+                  fill="none"
+                  stroke={modeColor(item.mode as TransportMode, theme)}
+                  strokeWidth="5"
+                  strokeLinecap="round"
+                  strokeDasharray={item.mode === 'air' ? '7 6' : undefined}
+                />
+              )
+            })
+          : null}
+        {journey
+          ? journey.legs.map((item, i) => {
+              const next = journey.legs[i + 1]
+              if (!next || next.mode === item.mode) return null
+              const a = pointFor(item.toId, item.mode)
+              const b = pointFor(next.fromId, next.mode)
+              const later = currentIndex < i
+              const upcoming = currentIndex === i
+              return (
+                <g key={`${item.id}-hop`} opacity={later ? 0.4 : 1}>
+                  <path
+                    d={`M${a.x} ${a.y} L ${b.x} ${b.y}`}
+                    fill="none"
+                    stroke={hopInk}
+                    strokeWidth={upcoming ? 3 : 2}
+                    strokeLinecap="round"
+                  />
+                  <circle cx={b.x} cy={b.y} r={upcoming ? 5 : 3.5} fill={hopInk} />
+                  <text
+                    x={(a.x + b.x) / 2 + 6}
+                    y={(a.y + b.y) / 2 - 6}
+                    fill={hopInk}
+                    fontSize="8"
+                    fontWeight="600"
+                    fontFamily="inherit"
+                  >
+                    {hopLabel(next)}
+                  </text>
+                </g>
+              )
+            })
+          : null}
         {layers.risk && scenario !== 'normal' ? (
           <path
             d="M70 160 L 140 118"
@@ -182,16 +230,11 @@ export function FallbackSchematic({
             </text>
           </g>
         ))}
-        <circle
-          cx={user.x}
-          cy={user.y}
-          r="7"
-          fill={light ? '#0a5c50' : '#3ee0c4'}
-        />
+        <circle cx={user.x} cy={user.y} r="7" fill={youColor} />
         <text
           x={user.x + 10}
           y={user.y - 8}
-          fill={light ? '#0a5c50' : '#3ee0c4'}
+          fill={youColor}
           fontSize="9"
           fontWeight="700"
           fontFamily="inherit"

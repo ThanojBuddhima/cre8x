@@ -21,7 +21,7 @@ export function MapControls({
       className={cn(
         'pointer-events-auto z-20 flex flex-col gap-2',
         className ??
-          'absolute right-3 bottom-[calc(var(--sheet-h,28dvh)+12px+env(safe-area-inset-bottom))] md:right-6 md:bottom-8',
+          'absolute right-3 bottom-[calc(var(--dock-h)+12px)] md:right-6',
       )}
     >
       <button

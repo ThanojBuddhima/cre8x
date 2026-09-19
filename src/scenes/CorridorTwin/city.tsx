@@ -2,7 +2,6 @@ import { Html, Line, OrbitControls } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import {
-  Color,
   DoubleSide,
   InstancedMesh,
   Object3D,
@@ -12,6 +11,8 @@ import {
   type Mesh,
 } from 'three'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
+import { currentLeg, currentLegIndex } from '@/lib/journeyProgress'
+import { hopLabel, modeColor, transferColor } from '@/lib/modeColors'
 import { useSynqStore } from '@/store/useSynqStore'
 import type { Journey, TransportMode } from '@/types'
 
@@ -68,26 +69,38 @@ function useMapPalette() {
       road: '#c5ced6',
       building: '#8b9aa8',
       hub: '#6d7c8a',
-      rail: '#0f8f7a',
-      air: '#3a9bb5',
-      you: '#0a5c50',
+      rail: modeColor('rail', 'light'),
+      air: modeColor('air', 'light'),
+      you: modeColor('walk', 'light'),
       hemiSky: '#f4f7fa',
       hemiGround: '#c9b8a4',
-      pod: '#5d6b76',
+      pod: modeColor('pod', 'light'),
+      hemiIntensity: 0.95,
+      ambient: 0.38,
+      dirIntensity: 1.35,
+      fillIntensity: 0,
+      buildingEmissive: 0,
+      buildingRoughness: 0.86,
     }
   }
   return {
-    ground: '#0b1218',
-    water: '#0a1824',
-    road: '#141c24',
-    building: '#1b2733',
-    hub: '#243240',
-    rail: '#3ee0c4',
-    air: '#8ad7ee',
-    you: '#3ee0c4',
-    hemiSky: '#c5dce8',
-    hemiGround: '#1c1812',
-    pod: '#4a5b66',
+    ground: '#1a2430',
+    water: '#173044',
+    road: '#2c3a48',
+    building: '#5c7388',
+    hub: '#6a8196',
+    rail: modeColor('rail', 'dark'),
+    air: modeColor('air', 'dark'),
+    you: modeColor('walk', 'dark'),
+    hemiSky: '#9eb6c4',
+    hemiGround: '#1a242c',
+    pod: modeColor('pod', 'dark'),
+    hemiIntensity: 0.88,
+    ambient: 0.55,
+    dirIntensity: 1.1,
+    fillIntensity: 0.28,
+    buildingEmissive: 0.12,
+    buildingRoughness: 0.86,
   }
 }
 
@@ -103,14 +116,31 @@ export function CorridorTwin({
   const introProgress = useSynqStore((s) => s.introProgress)
   const setInspector = useSynqStore((s) => s.setInspector)
   const palette = useMapPalette()
+  const theme = useSynqStore((s) => s.theme)
   const buildingCount = quality === 'HIGH' ? 42 : quality === 'MEDIUM' ? 22 : 10
   const user = userPosition(journey, progress)
+  const youColor = journey
+    ? modeColor(currentLeg(journey, progress).mode, theme)
+    : palette.you
 
   return (
     <>
-      <hemisphereLight args={[palette.hemiSky, palette.hemiGround, 0.95]} />
-      <directionalLight position={[-20, 28, 10]} intensity={1.35} color="#e7eef3" />
-      <ambientLight intensity={0.38} />
+      <hemisphereLight
+        args={[palette.hemiSky, palette.hemiGround, palette.hemiIntensity]}
+      />
+      <directionalLight
+        position={[-20, 28, 10]}
+        intensity={palette.dirIntensity}
+        color="#e7eef3"
+      />
+      {palette.fillIntensity > 0 ? (
+        <directionalLight
+          position={[22, 16, -18]}
+          intensity={palette.fillIntensity}
+          color="#e7eef3"
+        />
+      ) : null}
+      <ambientLight intensity={palette.ambient} />
 
       <CameraRig
         variant={variant}
@@ -149,7 +179,7 @@ export function CorridorTwin({
               emissiveIntensity={0.2}
             />
           </mesh>
-          <Train frozen={frozen} />
+          <Train frozen={frozen} color={palette.rail} />
         </>
       ) : null}
 
@@ -159,22 +189,37 @@ export function CorridorTwin({
             <boxGeometry args={[0.12, 0.12, 78]} />
             <meshBasicMaterial color={palette.air} transparent opacity={0.45} />
           </mesh>
-          <AirTraffic frozen={frozen} count={quality === 'LOW' ? 1 : 3} />
+          <AirTraffic
+            frozen={frozen}
+            count={quality === 'LOW' ? 1 : 3}
+            color={palette.air}
+          />
         </>
       ) : null}
 
-      {journey ? <ActiveRoute journey={journey} /> : null}
+      {journey ? (
+        <ActiveRoute
+          journey={journey}
+          progress={progress}
+          live={variant === 'live'}
+        />
+      ) : null}
 
       {layers.risk && scenario !== 'normal' ? <RiskOverlay /> : null}
 
-      <Buildings count={buildingCount} color={palette.building} />
+      <Buildings
+        count={buildingCount}
+        color={palette.building}
+        emissiveIntensity={palette.buildingEmissive}
+        roughness={palette.buildingRoughness}
+      />
       <Hubs
         color={palette.hub}
         onSelect={(title, lines) =>
           setInspector({ kind: 'corridor', title, lines })
         }
       />
-      <UserMarker position={user} color={palette.you} />
+      <UserMarker position={user} color={youColor} />
 
       <mesh
         position={[-8, 0.4, 18]}
@@ -283,18 +328,123 @@ function CameraRig({
   )
 }
 
-function ActiveRoute({ journey }: { journey: Journey }) {
-  const points = useMemo(() => {
-    const pts: [number, number, number][] = []
-    for (const leg of journey.legs) {
-      const offset = modeOffset(leg.mode)
-      pts.push([offset.x, offset.y + 0.15, HUB_Z[leg.fromId] ?? 0])
-      pts.push([offset.x, offset.y + 0.15, HUB_Z[leg.toId] ?? 98])
+function ActiveRoute({
+  journey,
+  progress,
+  live,
+}: {
+  journey: Journey
+  progress: number
+  live: boolean
+}) {
+  const theme = useSynqStore((s) => s.theme)
+  const index = currentLegIndex(journey, progress)
+
+  return (
+    <group>
+      {journey.legs.map((leg) => {
+        const offset = modeOffset(leg.mode)
+        const z0 = HUB_Z[leg.fromId] ?? 0
+        const z1 = HUB_Z[leg.toId] ?? 98
+        if (Math.abs(z1 - z0) < 0.2) return null
+        return (
+          <Line
+            key={leg.id}
+            points={[
+              [offset.x, offset.y + 0.15, z0],
+              [offset.x, offset.y + 0.15, z1],
+            ]}
+            color={modeColor(leg.mode, theme)}
+            lineWidth={4}
+            dashed={leg.mode === 'air'}
+            dashSize={1.2}
+            gapSize={0.8}
+          />
+        )
+      })}
+      {journey.legs.map((leg, i) => {
+        const next = journey.legs[i + 1]
+        if (!next || next.mode === leg.mode) return null
+        const from = modeOffset(leg.mode)
+        const to = modeOffset(next.mode)
+        const z = HUB_Z[leg.toId] ?? 0
+        let state: 'done' | 'next' | 'later' = 'done'
+        if (live) {
+          if (index < i) state = 'later'
+          else if (index === i) state = 'next'
+        }
+        return (
+          <TransferHop
+            key={`${leg.id}-hop`}
+            from={[from.x, from.y + 0.15, z]}
+            to={[to.x, to.y + 0.15, z]}
+            label={hopLabel(next)}
+            state={state}
+          />
+        )
+      })}
+    </group>
+  )
+}
+
+function TransferHop({
+  from,
+  to,
+  label,
+  state,
+}: {
+  from: [number, number, number]
+  to: [number, number, number]
+  label: string
+  state: 'done' | 'next' | 'later'
+}) {
+  const theme = useSynqStore((s) => s.theme)
+  const disc = useRef<Mesh>(null)
+  const color = state === 'later' ? (theme === 'light' ? '#9aa8b3' : '#6b7785') : transferColor(theme)
+  const opacity = state === 'later' ? 0.35 : state === 'done' ? 0.7 : 1
+
+  useFrame(({ clock }) => {
+    if (!disc.current) return
+    if (state !== 'next') {
+      disc.current.scale.setScalar(1)
+      return
     }
-    return pts
-  }, [journey])
-  const accent = useSynqStore((s) => (s.theme === 'light' ? '#0f8f7a' : '#3ee0c4'))
-  return <Line points={points} color={accent} lineWidth={3} />
+    const pulse = 1 + Math.sin(clock.elapsedTime * 4) * 0.22
+    disc.current.scale.setScalar(pulse)
+  })
+
+  const mid: [number, number, number] = [
+    (from[0] + to[0]) / 2,
+    (from[1] + to[1]) / 2,
+    (from[2] + to[2]) / 2,
+  ]
+
+  return (
+    <group>
+      <Line points={[from, to]} color={color} lineWidth={2} />
+      <mesh ref={disc} position={to}>
+        <sphereGeometry args={[0.38, 12, 12]} />
+        <meshStandardMaterial
+          color={color}
+          emissive={color}
+          emissiveIntensity={state === 'next' ? 0.45 : 0.12}
+          transparent
+          opacity={opacity}
+        />
+      </mesh>
+      <Html
+        center
+        position={[mid[0], mid[1] + 1.4, mid[2]]}
+        distanceFactor={52}
+        zIndexRange={[18, 0]}
+        pointerEvents="none"
+      >
+        <div className="map-label" style={{ opacity: state === 'later' ? 0.55 : 1 }}>
+          {label}
+        </div>
+      </Html>
+    </group>
+  )
 }
 
 function RiskOverlay() {
@@ -311,7 +461,17 @@ function RiskOverlay() {
   )
 }
 
-function Buildings({ count, color }: { count: number; color: string }) {
+function Buildings({
+  count,
+  color,
+  emissiveIntensity,
+  roughness,
+}: {
+  count: number
+  color: string
+  emissiveIntensity: number
+  roughness: number
+}) {
   const mesh = useRef<InstancedMesh>(null)
   const dummy = useMemo(() => new Object3D(), [])
 
@@ -330,7 +490,13 @@ function Buildings({ count, color }: { count: number; color: string }) {
   return (
     <instancedMesh ref={mesh} args={[undefined, undefined, count]}>
       <boxGeometry />
-      <meshStandardMaterial color={color} roughness={0.86} metalness={0.08} />
+      <meshStandardMaterial
+        color={color}
+        roughness={roughness}
+        metalness={0.08}
+        emissive={color}
+        emissiveIntensity={emissiveIntensity}
+      />
     </instancedMesh>
   )
 }
@@ -360,7 +526,7 @@ function Hubs({
             }}
           >
             <cylinderGeometry args={[1.1, 1.3, 2.8, 8]} />
-            <meshStandardMaterial color={color} />
+            <meshStandardMaterial color={color} roughness={0.82} metalness={0.1} />
           </mesh>
           <Html
             center
@@ -420,7 +586,7 @@ function Pods({
   )
 }
 
-function Train({ frozen }: { frozen: boolean }) {
+function Train({ frozen, color }: { frozen: boolean; color: string }) {
   const ref = useRef<Mesh>(null)
   const setInspector = useSynqStore((s) => s.setInspector)
   useFrame((_, delta) => {
@@ -442,15 +608,23 @@ function Train({ frozen }: { frozen: boolean }) {
     >
       <boxGeometry args={[1.1, 0.8, 7]} />
       <meshStandardMaterial
-        color="#2f4a4a"
-        emissive={new Color('#3ee0c4')}
-        emissiveIntensity={0.12}
+        color={color}
+        emissive={color}
+        emissiveIntensity={0.22}
       />
     </mesh>
   )
 }
 
-function AirTraffic({ frozen, count }: { frozen: boolean; count: number }) {
+function AirTraffic({
+  frozen,
+  count,
+  color,
+}: {
+  frozen: boolean
+  count: number
+  color: string
+}) {
   const group = useRef<Group>(null)
   const setInspector = useSynqStore((s) => s.setInspector)
   useFrame((_, delta) => {
@@ -475,7 +649,13 @@ function AirTraffic({ frozen, count }: { frozen: boolean; count: number }) {
           }}
         >
           <boxGeometry args={[1.6, 0.28, 2.4]} />
-          <meshStandardMaterial color="#c9d6de" metalness={0.4} roughness={0.3} />
+          <meshStandardMaterial
+            color={color}
+            metalness={0.35}
+            roughness={0.28}
+            emissive={color}
+            emissiveIntensity={0.18}
+          />
         </mesh>
       ))}
     </group>

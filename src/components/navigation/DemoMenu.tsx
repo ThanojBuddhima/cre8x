@@ -1,7 +1,5 @@
-import { CloudRain, HeartPulse, RotateCcw, Sparkles, Sun } from 'lucide-react'
+import { CloudRain, HeartPulse, Sparkles, Sun } from 'lucide-react'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
 import { Sheet } from '@/components/ui/sheet'
 import { useSynqStore } from '@/store/useSynqStore'
 import type { DemoScenario } from '@/types'
@@ -14,14 +12,10 @@ const scenarios: { id: DemoScenario; label: string; icon: typeof Sun }[] = [
 
 export function DemoMenu() {
   const [open, setOpen] = useState(false)
-  const navigate = useNavigate()
   const scenario = useSynqStore((s) => s.scenario)
   const setScenario = useSynqStore((s) => s.setScenario)
   const calmMode = useSynqStore((s) => s.calmMode)
   const setCalmMode = useSynqStore((s) => s.setCalmMode)
-  const theme = useSynqStore((s) => s.theme)
-  const setTheme = useSynqStore((s) => s.setTheme)
-  const replayIntro = useSynqStore((s) => s.replayIntro)
 
   return (
     <>
@@ -59,17 +53,6 @@ export function DemoMenu() {
           })}
         </div>
         <label className="mt-5 flex min-h-11 items-center justify-between gap-3 text-sm">
-          <span>Light mode</span>
-          <input
-            type="checkbox"
-            checked={theme === 'light'}
-            onChange={(event) =>
-              setTheme(event.target.checked ? 'light' : 'dark')
-            }
-            className="size-5 accent-accent"
-          />
-        </label>
-        <label className="mt-2 flex min-h-11 items-center justify-between gap-3 text-sm">
           <span>Calm mode · larger type, no 3D</span>
           <input
             type="checkbox"
@@ -78,18 +61,6 @@ export function DemoMenu() {
             className="size-5 accent-accent"
           />
         </label>
-        <Button
-          variant="secondary"
-          className="mt-4 w-full"
-          onClick={() => {
-            replayIntro()
-            setOpen(false)
-            navigate('/')
-          }}
-        >
-          <RotateCcw size={16} />
-          Replay introduction
-        </Button>
       </Sheet>
     </>
   )

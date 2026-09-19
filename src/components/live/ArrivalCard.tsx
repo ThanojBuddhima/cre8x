@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 export function ArrivalCard() {
   return (
-    <GlassCard className="pointer-events-auto max-w-sm text-center">
+    <GlassCard className="pointer-events-auto w-full text-center md:max-w-sm">
       <p className="text-xs tracking-[0.2em] text-dim">ARRIVED</p>
       <h2 className="mt-2 font-serif text-3xl">You’re at KDU.</h2>
       <p className="mt-2 text-sm text-muted">

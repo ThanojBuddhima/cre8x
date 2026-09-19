@@ -1,5 +1,7 @@
 import { useEffect, type ReactNode } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { useAppGlow } from '@/hooks/useAppGlow'
+import { useLiveClock } from '@/hooks/useLiveClock'
 import { detectQuality, prefersReducedMotion } from '@/services/quality'
 import { useSynqStore } from '@/store/useSynqStore'
 import type { DemoScenario } from '@/types'
@@ -7,11 +9,11 @@ import type { DemoScenario } from '@/types'
 export function Providers({ children }: { children: ReactNode }) {
   const setQuality = useSynqStore((s) => s.setQuality)
   const setCalmMode = useSynqStore((s) => s.setCalmMode)
-  const setIntroComplete = useSynqStore((s) => s.setIntroComplete)
   const setScenario = useSynqStore((s) => s.setScenario)
   const calmMode = useSynqStore((s) => s.calmMode)
-  const theme = useSynqStore((s) => s.theme)
   const [params] = useSearchParams()
+  useAppGlow()
+  useLiveClock()
 
   useEffect(() => {
     const quality = detectQuality()
@@ -19,30 +21,25 @@ export function Providers({ children }: { children: ReactNode }) {
     const reduced = prefersReducedMotion()
     if (reduced) {
       setCalmMode(true)
-      setIntroComplete(true)
       document.documentElement.classList.add('reduce-motion')
     }
-  }, [setCalmMode, setIntroComplete, setQuality])
+  }, [setCalmMode, setQuality])
 
   useEffect(() => {
     document.documentElement.classList.toggle('calm', calmMode)
   }, [calmMode])
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', theme === 'dark')
-    const meta = document.querySelector('meta[name="theme-color"]')
-    meta?.setAttribute('content', theme === 'dark' ? '#070B10' : '#F4F6F8')
-  }, [theme])
+    document.documentElement.classList.add('dark')
+    window.localStorage.setItem('synq-theme', 'dark')
+  }, [])
 
   useEffect(() => {
     const value = params.get('scenario')
     if (value === 'rain' || value === 'normal' || value === 'emergency') {
       setScenario(value as DemoScenario)
     }
-    if (params.get('skipIntro') === '1') {
-      setIntroComplete(true)
-    }
-  }, [params, setIntroComplete, setScenario])
+  }, [params, setScenario])
 
   return children
 }

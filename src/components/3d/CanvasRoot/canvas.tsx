@@ -1,5 +1,5 @@
 import { Canvas } from '@react-three/fiber'
-import { CorridorTwin } from '@/scenes/CorridorTwin/CorridorTwin'
+import { CorridorTwin } from '@/scenes/CorridorTwin/city' // mode-colored routes + slate city
 import { useSynqStore } from '@/store/useSynqStore'
 import type { Journey } from '@/types'
 
@@ -18,22 +18,23 @@ export default function CanvasRoot({
   const calmMode = useSynqStore((s) => s.calmMode)
   const theme = useSynqStore((s) => s.theme)
   const frozen = calmMode
-  const sky = theme === 'light' ? '#e8eef2' : '#070b10'
+  const dark = theme !== 'light'
+  const sky = dark ? '#0b1219' : '#e8eef2'
 
   return (
-    <div className="absolute inset-0">
+    <div className="absolute inset-0 h-full w-full">
       <Canvas
         dpr={quality === 'HIGH' ? [1, 1.5] : 1}
         gl={{
           antialias: quality === 'HIGH',
           powerPreference: 'high-performance',
-          alpha: true,
+          alpha: false,
         }}
         camera={{ position: [32, 24, -22], fov: 42, near: 0.1, far: 240 }}
         frameloop={frozen ? 'demand' : 'always'}
       >
         <color attach="background" args={[sky]} />
-        <fog attach="fog" args={[sky, 50, 150]} />
+        <fog attach="fog" args={[sky, dark ? 70 : 50, dark ? 150 : 150]} />
         <CorridorTwin
           variant={variant}
           journey={journey}

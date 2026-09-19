@@ -1,9 +1,9 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Providers } from '@/app/providers'
 import { AppShell } from '@/components/navigation/AppShell'
-import { JourneyDetails } from '@/pages/journey'
-import { LandingHome } from '@/pages/home'
-import { LiveTracking } from '@/pages/live'
+import { JourneyDetails } from '@/pages/journey/screen'
+import { LandingHome } from '@/pages/home/screen'
+import { LiveTracking } from '@/pages/live/screen'
 
 export default function App() {
   return (

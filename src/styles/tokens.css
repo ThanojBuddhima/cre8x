@@ -8,8 +8,12 @@
   --color-paper: #1b2430;
   --color-muted: #5b6673;
   --color-dim: #7a8694;
-  --color-accent: #0f8f7a;
-  --color-accent-dim: color-mix(in srgb, #0f8f7a 16%, transparent);
+  --color-accent: var(--glow, #e85d04);
+  --color-accent-dim: color-mix(in srgb, var(--glow, #e85d04) 16%, transparent);
+  --color-mode-walk: var(--mode-walk, #e85d04);
+  --color-mode-pod: var(--mode-pod, #1d4ed8);
+  --color-mode-rail: var(--mode-rail, #0f8f7a);
+  --color-mode-air: var(--mode-air, #7c3aed);
   --color-on-accent: #ffffff;
   --color-warning: #b7791f;
   --color-danger: #b44545;
@@ -32,14 +36,23 @@
   --dur-micro: 150ms;
   --dur-ui: 280ms;
   --dur-cam: 800ms;
+  --dur-glow: 500ms;
   --touch: 44px;
-  --sheet-h: 42dvh;
+  --sheet-h: 50dvh;
+  --dock-h: calc(6.25rem + env(safe-area-inset-bottom));
+  --brand: #e85d04;
+  --glow: #e85d04;
   --map-sky: #e8eef2;
   --map-ground: #d5dde3;
   --map-water: #b9d0dc;
   --map-building: #8b9aa8;
   --map-road: #c5ced6;
-  --map-you: #0a5c50;
+  --map-you: #e85d04;
+  --mode-walk: #e85d04;
+  --mode-pod: #1d4ed8;
+  --mode-rail: #0f8f7a;
+  --mode-air: #7c3aed;
+  --mode-transfer: #1b2430;
 }
 
 html.dark {
@@ -49,8 +62,8 @@ html.dark {
   --color-paper: #f4f7fa;
   --color-muted: #a8b3c0;
   --color-dim: #6b7785;
-  --color-accent: #3ee0c4;
-  --color-accent-dim: color-mix(in srgb, #3ee0c4 18%, transparent);
+  --color-accent: var(--glow, #ff8a1a);
+  --color-accent-dim: color-mix(in srgb, var(--glow, #ff8a1a) 18%, transparent);
   --color-on-accent: #070b10;
   --color-warning: #e8b86d;
   --color-danger: #c45c5c;
@@ -59,15 +72,22 @@ html.dark {
   --color-surface-2: rgb(255 255 255 / 0.12);
   --shadow-glass: 0 12px 40px rgb(0 0 0 / 0.35);
   --bg: #070b10;
+  --brand: #ff8a1a;
+  --glow: #ff8a1a;
   --glass-bg: linear-gradient(
     180deg,
     rgb(255 255 255 / 0.1),
     rgb(255 255 255 / 0.06)
   );
-  --map-sky: #070b10;
-  --map-ground: #0b1218;
-  --map-water: #0a1824;
-  --map-building: #1b2733;
-  --map-road: #141c24;
-  --map-you: #3ee0c4;
+  --map-sky: #0b1219;
+  --map-ground: #1a2430;
+  --map-water: #173044;
+  --map-building: #5c7388;
+  --map-road: #3a4958;
+  --map-you: #ff8a1a;
+  --mode-walk: #ff8a1a;
+  --mode-pod: #4f8cff;
+  --mode-rail: #2ee6a6;
+  --mode-air: #c77dff;
+  --mode-transfer: #f4f7fa;
 }
