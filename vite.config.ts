@@ -6,10 +6,9 @@ import { defineConfig } from 'vite'
 
 const rootDir = path.dirname(fileURLToPath(import.meta.url))
 
-// GitHub Pages serves this project at /cre8x/, so the production build needs
-// that prefix. Dev stays at / so local URLs are unchanged.
+// Vercel serves this project at the root, so base is simply '/'
 export default defineConfig(({ command }) => ({
-  base: command === 'build' ? '/cre8x/' : '/',
+  base: '/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
