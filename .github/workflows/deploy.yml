@@ -28,6 +28,9 @@ jobs:
       - run: npm ci
 
       - run: npm run build
+        env:
+          # Optional: tiles fall back to CARTO anonymous access if unset.
+          VITE_CARTO_KEY: ${{ secrets.VITE_CARTO_KEY }}
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

@@ -15,9 +15,27 @@ import { brandColor, modeColor } from '@/lib/modeColors'
 import { useSynqStore } from '@/store/useSynqStore'
 import type { Journey } from '@/types'
 
+/**
+ * CARTO basemaps. The key is read from VITE_CARTO_KEY rather than committed:
+ * this repo is public. It still ships in the client bundle, because a raster
+ * basemap is fetched by the browser and no client-side key can be hidden --
+ * restrict it by domain in the CARTO dashboard instead of relying on secrecy.
+ * Without a key these endpoints still serve tiles anonymously, so the map
+ * degrades rather than breaking.
+ */
+const CARTO_KEY = (
+  import.meta.env as unknown as Record<string, string | undefined>
+).VITE_CARTO_KEY
+
+function tileUrl(style: string) {
+  const base =
+    'https://basemaps.cartocdn.com/rastertiles/' + style + '/{z}/{x}/{y}.png'
+  return CARTO_KEY ? base + '?key=' + CARTO_KEY : base
+}
+
 const TILES = {
-  dark: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-  light: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+  dark: tileUrl('dark_all'),
+  light: tileUrl('voyager'),
 }
 const ATTRIBUTION =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
@@ -114,7 +132,7 @@ export function LeafletMap({
           key={theme}
           url={theme === 'light' ? TILES.light : TILES.dark}
           attribution={ATTRIBUTION}
-          maxZoom={19}
+          maxZoom={20}
         />
 
         {journey.legs.map((leg) => {
