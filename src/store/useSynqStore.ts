@@ -103,7 +103,7 @@ export const useSynqStore = create<SynqState>((set) => ({
   quality: detectQuality(),
   calmMode: reduced,
   theme: readTheme(),
-  introComplete: true,
+  introComplete: false,
   introProgress: 0,
   inspector: null,
   arrived: false,

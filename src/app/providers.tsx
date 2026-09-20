@@ -10,6 +10,7 @@ export function Providers({ children }: { children: ReactNode }) {
   const setQuality = useSynqStore((s) => s.setQuality)
   const setCalmMode = useSynqStore((s) => s.setCalmMode)
   const setScenario = useSynqStore((s) => s.setScenario)
+  const setIntroComplete = useSynqStore((s) => s.setIntroComplete)
   const calmMode = useSynqStore((s) => s.calmMode)
   const theme = useSynqStore((s) => s.theme)
   const [params] = useSearchParams()
@@ -36,6 +37,10 @@ export function Providers({ children }: { children: ReactNode }) {
       .querySelector('meta[name="theme-color"]')
       ?.setAttribute('content', theme === 'dark' ? '#070b10' : '#f4f6f8')
   }, [theme])
+
+  useEffect(() => {
+    if (params.get('skipIntro') === '1') setIntroComplete(true)
+  }, [params, setIntroComplete])
 
   useEffect(() => {
     const value = params.get('scenario')
