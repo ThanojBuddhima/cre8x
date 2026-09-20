@@ -21,7 +21,7 @@ export function TravelNeeds() {
 
   return (
     <fieldset className="mt-6 border-0 p-0">
-      <legend className="text-base font-medium text-paper">
+      <legend className="text-base font-medium text-ink">
         How you travel
       </legend>
       <p className="mt-1 text-sm text-muted">
@@ -60,8 +60,8 @@ export function TravelNeeds() {
           Larger text
         </Chip>
       </div>
-      <p className="mt-2 min-h-[1.25rem] text-sm text-accent" aria-live="polite">
-        {notes.length ? `SYNQ will show ${notes.join(', ')}.` : ''}
+      <p className="mt-2 min-h-[1.25rem] text-sm text-accent-ink" aria-live="polite">
+        {notes.length ? `SYNQ will show ${notes.join(',')}.` : ''}
       </p>
     </fieldset>
   )

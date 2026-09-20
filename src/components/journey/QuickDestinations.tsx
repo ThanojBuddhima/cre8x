@@ -26,7 +26,7 @@ export function QuickDestinations({
 }) {
   return (
     <section aria-labelledby="quick-destinations" className="mt-5">
-      <h2 id="quick-destinations" className="text-base font-medium text-paper">
+      <h2 id="quick-destinations" className="text-base font-medium text-ink">
         Going somewhere you go often?
       </h2>
       <p className="mt-1 text-sm text-muted">
@@ -44,10 +44,10 @@ export function QuickDestinations({
               onClick={() => onPick(item.id)}
               aria-pressed={active}
               className={cn(
-                'flex min-h-[5.5rem] flex-col items-center justify-center gap-2 rounded-xl border px-2 text-center transition-colors duration-[var(--dur-micro)] disabled:opacity-40',
+                'flex min-h-[5.5rem] flex-col items-center justify-center gap-2 rounded-xl px-2 text-center disabled:opacity-40',
                 active
-                  ? 'border-accent bg-accent-dim text-accent'
-                  : 'border-hairline bg-surface text-paper hover:border-accent/40',
+                  ? 'neu-pressed-sm neu-scope-accent text-accent-ink'
+                  : 'neu-pressable-sm text-ink',
               )}
             >
               <Icon size={24} aria-hidden />
@@ -59,7 +59,7 @@ export function QuickDestinations({
           type="button"
           disabled={disabled}
           onClick={onOther}
-          className="flex min-h-[5.5rem] flex-col items-center justify-center gap-2 rounded-xl border border-hairline bg-surface px-2 text-center text-paper transition-colors duration-[var(--dur-micro)] hover:border-accent/40 disabled:opacity-40"
+          className="neu-pressable-sm flex min-h-[5.5rem] flex-col items-center justify-center gap-2 rounded-xl px-2 text-center text-ink disabled:opacity-40"
         >
           <MoreHorizontal size={24} aria-hidden />
           <span className="text-sm font-medium">Somewhere else</span>

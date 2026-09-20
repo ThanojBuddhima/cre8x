@@ -63,6 +63,28 @@ function positionAt(journey: Journey, progress: number): [number, number] {
   ]
 }
 
+/**
+ * Leaflet caches its container size, so a map sized off a 100dvh parent goes
+ * stale the moment the mobile URL bar collapses or the device rotates - the
+ * tile grid greys out until something else forces a redraw.
+ */
+function InvalidateOnResize() {
+  const map = useMap()
+
+  useEffect(() => {
+    const refresh = () => map.invalidateSize({ animate: false })
+    const observer = new ResizeObserver(refresh)
+    observer.observe(map.getContainer())
+    window.addEventListener('orientationchange', refresh)
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('orientationchange', refresh)
+    }
+  }, [map])
+
+  return null
+}
+
 /** Bridges the existing MapControls store commands to the Leaflet instance. */
 function MapCommands({ follow }: { follow: [number, number] }) {
   const map = useMap()
@@ -86,6 +108,15 @@ function MapCommands({ follow }: { follow: [number, number] }) {
   return null
 }
 
+/** Resolves a design token to a concrete colour, which SVG attributes need. */
+function readToken(name: string, fallback: string) {
+  if (typeof window === 'undefined') return fallback
+  const value = getComputedStyle(document.documentElement)
+    .getPropertyValue(name)
+    .trim()
+  return value || fallback
+}
+
 export function LeafletMap({
   journey,
   progress = 0,
@@ -97,7 +128,8 @@ export function LeafletMap({
   const layers = useSynqStore((s) => s.layers)
 
   const accent = brandColor(theme)
-  const surface = theme === 'light' ? '#f4f6f8' : '#070b10'
+  const surface = readToken('--neu-base', theme === 'light' ? '#E0E5EC' : '#2A2E35')
+  const hairline = readToken('--neu-light', '#ffffff')
 
   const you = useMemo(
     () => positionAt(journey, progress),
@@ -128,6 +160,7 @@ export function LeafletMap({
         className="h-full w-full"
         style={{ background: 'var(--map-sky)' }}
       >
+        <InvalidateOnResize />
         <TileLayer
           key={theme}
           url={theme === 'light' ? TILES.light : TILES.dark}
@@ -192,7 +225,7 @@ export function LeafletMap({
           center={you}
           radius={7}
           pathOptions={{
-            color: '#ffffff',
+            color: hairline,
             weight: 2,
             fillColor: accent,
             fillOpacity: 1,

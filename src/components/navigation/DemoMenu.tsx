@@ -20,7 +20,7 @@ export function DemoMenu() {
     <>
       <button
         type="button"
-        className="pointer-events-auto glass flex h-11 items-center gap-2 rounded-full px-4 text-sm text-muted"
+        className="neu-pressable-sm pointer-events-auto flex h-11 items-center gap-2 rounded-full px-4 text-sm font-bold text-muted hoverable:text-ink"
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
       >
@@ -43,10 +43,10 @@ export function DemoMenu() {
                   resetLive()
                   setOpen(false)
                 }}
-                className={`pointer-events-auto flex h-12 items-center gap-3 rounded-md border px-3 text-left text-sm ${
+                className={`pointer-events-auto flex h-12 items-center gap-3 rounded-lg px-3 text-left text-sm font-bold ${
                   scenario === item.id
-                    ? 'border-accent bg-accent-dim text-accent'
-                    : 'border-hairline text-paper'
+                    ? 'neu-sunken-sm neu-scope-accent text-accent-ink'
+                    : 'neu-row text-ink'
                 }`}
               >
                 <Icon size={16} />
@@ -61,7 +61,7 @@ export function DemoMenu() {
             resetLive()
             setOpen(false)
           }}
-          className="pointer-events-auto mt-2 flex h-12 w-full items-center gap-3 rounded-md border border-hairline px-3 text-left text-sm text-paper"
+          className="neu-row pointer-events-auto mt-2 flex h-12 w-full items-center gap-3 rounded-lg px-3 text-left text-sm font-bold text-ink"
         >
           <RotateCcw size={16} aria-hidden />
           Replay journey from the start

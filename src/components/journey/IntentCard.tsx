@@ -87,8 +87,6 @@ export function IntentCard({ onPlanned, compact = false }: IntentCardProps) {
     const destinationId = overrideDestinationId ?? intent.destinationId
     if (!destinationId) return
     setBusy(true)
-    // A new plan is a new trip: clear any finished or in-flight run first,
-    // otherwise the previous journey's `arrived` state freezes this one.
     resetLive()
     await new Promise((resolve) => setTimeout(resolve, calmMode ? 200 : 900))
     setResults(
@@ -118,13 +116,13 @@ export function IntentCard({ onPlanned, compact = false }: IntentCardProps) {
     <div className="pointer-events-auto w-full">
       <h1
         className={cn(
-          'font-serif leading-tight text-paper',
-          compact ? 'text-2xl' : 'text-3xl md:text-4xl',
+          'font-display font-extrabold tracking-tight text-ink',
+          compact ? 'text-3xl md:text-4xl' : 'text-4xl md:text-5xl',
         )}
       >
         Where do you need to go?
       </h1>
-      <p className="mt-2 text-base text-muted">
+      <p className="mt-4 text-lg font-medium text-muted">
         Tell SYNQ the place and the time. It works out the rest.
       </p>
 
@@ -138,14 +136,14 @@ export function IntentCard({ onPlanned, compact = false }: IntentCardProps) {
         onOther={() => setPicking('destination')}
       />
 
-      <div className="glass mt-5 flex items-stretch gap-1 rounded-xl p-2">
+      <div className="neu-sunken mt-8 flex items-stretch gap-1 rounded-xl p-3">
         <div className="min-w-0 flex-1">
           <TripRow
             label="From"
             value={origin.name}
             onClick={() => setPicking('origin')}
           />
-          <div className="ml-3 h-px bg-hairline" />
+          <div className="mx-4 h-px bg-muted opacity-20" />
           <TripRow
             label="To"
             value={destination ? destination.name : 'Choose a place'}
@@ -157,15 +155,15 @@ export function IntentCard({ onPlanned, compact = false }: IntentCardProps) {
           type="button"
           onClick={swap}
           aria-label="Swap start and destination"
-          className="my-auto grid size-11 shrink-0 place-items-center rounded-full border border-hairline bg-surface-2 text-muted transition-colors hover:border-accent/40 hover:text-accent"
+          className="neu-pressable-sm my-auto grid size-12 shrink-0 place-items-center rounded-lg text-muted hoverable:text-accent-ink"
         >
-          <ArrowUpDown size={16} aria-hidden />
+          <ArrowUpDown size={18} aria-hidden />
         </button>
       </div>
 
-      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+      <div className="mt-6 grid gap-4 sm:grid-cols-2">
         <div
-          className="flex rounded-full border border-hairline p-1"
+          className="neu-sunken flex rounded-lg p-1.5"
           role="group"
           aria-label="Time mode"
         >
@@ -175,10 +173,10 @@ export function IntentCard({ onPlanned, compact = false }: IntentCardProps) {
               type="button"
               aria-pressed={intent.timeMode === value}
               className={cn(
-                'h-11 flex-1 rounded-full text-sm font-medium transition-colors',
+                'h-11 flex-1 rounded-md text-sm font-bold transition-[box-shadow,color] duration-[var(--dur-ui)] ease-[var(--ease-out)]',
                 intent.timeMode === value
-                  ? 'bg-accent-dim text-accent'
-                  : 'text-muted hover:text-paper',
+                  ? 'neu-raised-sm text-accent-ink'
+                  : 'text-muted hoverable:text-ink',
               )}
               onClick={() => setIntent({ timeMode: value })}
             >
@@ -196,11 +194,11 @@ export function IntentCard({ onPlanned, compact = false }: IntentCardProps) {
         />
       </div>
 
-      <fieldset className="mt-6 border-0 p-0">
-        <legend className="text-base font-medium text-paper">
+      <fieldset className="mt-10 border-0 p-0">
+        <legend className="text-base font-bold text-ink mb-4">
           What matters most
         </legend>
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-3">
           {preferences.map((item) => {
             const Icon = item.icon
             return (
@@ -216,7 +214,7 @@ export function IntentCard({ onPlanned, compact = false }: IntentCardProps) {
             )
           })}
         </div>
-        <p className="mt-2 text-sm text-muted" aria-live="polite">
+        <p className="mt-4 text-sm font-medium text-muted" aria-live="polite">
           {hint}
         </p>
       </fieldset>
@@ -225,13 +223,14 @@ export function IntentCard({ onPlanned, compact = false }: IntentCardProps) {
 
       <Button
         size="lg"
-        className="mt-6 h-14 w-full text-base"
-        disabled={busy || !intent.destinationId}
+        className="mt-10 h-14 w-full text-base"
+        loading={busy}
+        disabled={!intent.destinationId}
         onClick={() => void plan()}
       >
         {busy ? 'Working out your options…' : 'Plan my journey'}
       </Button>
-      <p className="mt-2 text-center text-sm text-muted">
+      <p className="mt-4 text-center text-sm font-medium text-muted">
         {destination
           ? `${origin.shortName} to ${destination.shortName}`
           : 'Choose where you are going first'}
@@ -272,20 +271,20 @@ function TripRow({
     <button
       type="button"
       onClick={onClick}
-      className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition-colors hover:bg-surface"
+      className="neu-row flex w-full items-center gap-4 rounded-lg px-4 py-3 text-left"
     >
-      <span className="w-12 shrink-0 text-sm font-medium text-dim">
+      <span className="w-12 shrink-0 text-xs font-bold uppercase tracking-wider text-muted">
         {label}
       </span>
       <span
         className={cn(
-          'min-w-0 flex-1 truncate text-base font-medium',
-          muted ? 'text-dim' : 'text-paper',
+          'min-w-0 flex-1 truncate text-lg font-bold',
+          muted ? 'text-muted' : 'text-ink',
         )}
       >
         {value}
       </span>
-      <ChevronDown size={18} className="shrink-0 text-muted" aria-hidden />
+      <ChevronDown size={18} className="shrink-0 text-accent-ink" aria-hidden />
     </button>
   )
 }

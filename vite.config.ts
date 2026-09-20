@@ -6,10 +6,12 @@ import { defineConfig } from 'vite'
 
 const rootDir = path.dirname(fileURLToPath(import.meta.url))
 
-// GitHub Pages serves this project at /cre8x/, so the production build needs
-// that prefix. Dev stays at / so local URLs are unchanged.
-export default defineConfig(({ command }) => ({
-  base: command === 'build' ? '/cre8x/' : '/',
+// Vercel serves this project at the domain root, so that is the default.
+// GitHub Pages serves it under /cre8x/ - set VITE_BASE=/cre8x/ when building
+// for that target. Hardcoding the Pages prefix made every asset URL 404 on
+// Vercel, because index.html asked for /cre8x/assets/... at the root.
+export default defineConfig(() => ({
+  base: process.env.VITE_BASE ?? '/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {

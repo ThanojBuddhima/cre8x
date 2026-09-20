@@ -691,7 +691,7 @@ function UserMarker({
       >
         <div className="map-label whitespace-nowrap">
           {waitingState?.isWaiting ? (
-            <span className="flex items-center gap-1.5 font-bold text-accent">
+            <span className="flex items-center gap-1.5 font-bold text-accent-ink">
               <span className="inline-block h-1.5 w-1.5 animate-ping rounded-full bg-accent" />
               {waitingState.label} is almost here... arriving in {waitingState.countdown} min
             </span>

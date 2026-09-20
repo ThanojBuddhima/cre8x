@@ -2,7 +2,6 @@ import { Link, Outlet } from 'react-router-dom'
 import { BottomDock } from '@/components/navigation/BottomDock'
 import { DemoMenu } from '@/components/navigation/DemoMenu'
 import { ModeTag } from '@/components/navigation/ModeTag'
-import { ModeWash } from '@/components/navigation/ModeWash'
 import { ThemeToggle } from '@/components/navigation/ThemeToggle'
 import { useLiveJourney } from '@/hooks/useLiveJourney'
 
@@ -10,17 +9,21 @@ export function AppShell() {
   const { progress, color } = useLiveJourney()
 
   return (
-    <div className="relative min-h-dvh overflow-x-hidden bg-ink text-paper">
-      <div className="fixed inset-x-0 top-0 z-50 h-1.5 bg-surface/30">
+    <div className="relative min-h-dvh overflow-x-hidden bg-[var(--neu-surface)] text-ink">
+      {/* Journey progress. A sunken rail so the fill reads as sitting in a
+          groove rather than floating on the page edge. */}
+      <div className="neu-sunken-sm fixed inset-x-0 top-0 z-50 h-1.5">
         <div
-          className="h-full transition-all duration-500 ease-out"
+          className="h-full rounded-r-full transition-all duration-500 ease-out"
           style={{ width: `${Math.round(progress * 100)}%`, backgroundColor: color }}
         />
       </div>
+
       <a href="#main" className="skip-link">
         Skip to journey planner
       </a>
-      <ModeWash />
+
+      {/* Pages reserve --header-h at the top rather than guessing an offset. */}
       <header
         className="pointer-events-none absolute inset-x-0 top-0 z-30 px-3 md:px-5"
         style={{ paddingTop: 'calc(10px + env(safe-area-inset-top))' }}
@@ -29,12 +32,14 @@ export function AppShell() {
           <div className="flex min-w-0 items-center gap-2">
             <Link
               to="/"
-              className="pointer-events-auto flex h-11 items-center gap-2 rounded-full px-1"
+              className="tap pointer-events-auto flex items-center gap-2 rounded-full pr-2"
             >
-              <span className="grid size-8 place-items-center rounded-full border border-accent/40 bg-accent-dim text-xs font-semibold text-accent">
-                S
+              <span className="neu-raised-sm grid size-9 shrink-0 place-items-center rounded-full font-display text-xs font-extrabold tracking-tight text-accent-ink">
+                SY
               </span>
-              <span className="text-sm tracking-[0.18em] text-paper">SYNQ</span>
+              <span className="text-sm font-bold tracking-[0.18em] text-ink">
+                SYNQ
+              </span>
             </Link>
             <span className="max-[399px]:hidden">
               <ModeTag />
@@ -46,6 +51,7 @@ export function AppShell() {
           </div>
         </div>
       </header>
+
       <Outlet />
       <BottomDock />
     </div>
