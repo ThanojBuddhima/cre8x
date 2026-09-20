@@ -5,7 +5,7 @@ import { LayerToggles } from '@/components/city/LayerToggles'
 import { MapLegend } from '@/components/city/MapLegend'
 import { LocationChip } from '@/components/city/LocationChip'
 import { MapControls } from '@/components/city/MapControls'
-import { QualityGate } from '@/components/3d/map/QualityGate'
+import { LiveMapGate } from '@/components/city/LiveMapGate'
 import { MapSplitLayout } from '@/components/navigation/MapSplitLayout'
 import { useLiveJourney } from '@/hooks/useLiveJourney'
 import { useSynqStore } from '@/store/useSynqStore'
@@ -25,9 +25,7 @@ export function LiveTracking() {
 
   return (
     <MapSplitLayout
-      map={
-        <QualityGate variant="live" journey={journey} progress={progress} />
-      }
+      map={<LiveMapGate journey={journey} progress={progress} />}
       overlay={
         <>
           <p className="sr-only" aria-live="polite">

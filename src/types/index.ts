@@ -21,6 +21,8 @@ export interface Place {
   shortName: string
   kind: 'hub' | 'interchange' | 'vertiport' | 'campus'
   hint: string
+  lat: number
+  lng: number
 }
 
 export interface AccessibilityProfile {
