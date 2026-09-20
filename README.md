@@ -80,16 +80,16 @@ Built for maximum performance, fluid animations, and robust state management:
 
 ##  Deploy
 
-The app is a static Vite SPA deployed to **GitHub Pages** by
-[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) on every push to
-`main`. The build sets `base: '/cre8x/'` and `scripts/spa-fallback.mjs` writes a
-`404.html` copy of `index.html`, so client-side deep links resolve.
+The app is a static Vite SPA deployed to **Vercel** on every push to `main`.
+It is served from the domain root, so `base` is `'/'`. Client-side deep links
+such as `/journey/j1` resolve through the rewrite in
+[`vercel.json`](vercel.json), which serves `index.html` for any path.
 
-To publish: enable **Settings → Pages → Source: GitHub Actions**, then push to
-`main`.
+Set `VITE_CARTO_KEY` in the Vercel project's environment variables for the
+keyed CARTO basemaps; tiles fall back to anonymous access if it is unset.
 
 ```bash
-npm run build   # also emits dist/404.html and dist/.nojekyll
+npm run build   # output in dist/
 ```
 
 ##  Documentation & Assets
