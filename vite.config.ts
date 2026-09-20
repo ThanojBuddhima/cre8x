@@ -7,7 +7,7 @@ import { defineConfig } from 'vite'
 const rootDir = path.dirname(fileURLToPath(import.meta.url))
 
 // Vercel serves this project at the root, so base is simply '/'
-export default defineConfig(({ command }) => ({
+export default defineConfig(() => ({
   base: '/',
   plugins: [react(), tailwindcss()],
   resolve: {
