@@ -127,7 +127,6 @@ export function LeafletMap({
 
   const accent = brandColor(theme)
   const surface = readToken('--neu-base', theme === 'light' ? '#E0E5EC' : '#2A2E35')
-  const hairline = readToken('--neu-light', '#ffffff')
 
   const you = useMemo(
     () => positionAt(journey, progress),

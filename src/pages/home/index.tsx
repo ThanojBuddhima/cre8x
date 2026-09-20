@@ -6,7 +6,6 @@ import { IntentCard } from '@/components/journey/IntentCard'
 import { JourneyList } from '@/components/journey/JourneyList'
 import { getPlace } from '@/data/places'
 import { useSynqStore } from '@/store/useSynqStore'
-import { QualityGate } from '@/components/3d/map/QualityGate'
 import { CityStatusChip } from '@/components/city/CityStatusChip'
 
 const narrativeSections = [

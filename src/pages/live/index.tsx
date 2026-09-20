@@ -60,8 +60,6 @@ export function LiveTracking() {
   const navigate = useNavigate()
   const selectJourney = useSynqStore((s) => s.selectJourney)
   const { journey, progress, arrived } = useLiveJourney()
-  const calmMode = useSynqStore((s) => s.calmMode)
-  const setCalmMode = useSynqStore((s) => s.setCalmMode)
   const desktop = useMediaQuery('(min-width: 1024px)')
   const [sheetOpen, setSheetOpen] = useState(false)
 
