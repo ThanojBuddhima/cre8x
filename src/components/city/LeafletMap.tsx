@@ -23,9 +23,7 @@ import type { Journey } from '@/types'
  * Without a key these endpoints still serve tiles anonymously, so the map
  * degrades rather than breaking.
  */
-const CARTO_KEY = (
-  import.meta.env as unknown as Record<string, string | undefined>
-).VITE_CARTO_KEY
+const CARTO_KEY = import.meta.env.VITE_CARTO_KEY
 
 function tileUrl(style: string) {
   const base =
