@@ -1,5 +1,10 @@
 export type TransportMode = 'walk' | 'bus' | 'pod' | 'rail' | 'air'
-export type Preference = 'fastest' | 'calm' | 'accessible' | 'energy'
+export type Preference =
+  | 'fastest'
+  | 'calm'
+  | 'accessible'
+  | 'energy'
+  | 'resilient'
 export type DemoScenario = 'normal' | 'rain' | 'emergency'
 export type QualityLevel = 'HIGH' | 'MEDIUM' | 'LOW' | 'FALLBACK'
 export type Confidence = 'High' | 'Medium' | 'Low'
@@ -48,6 +53,8 @@ export interface Journey {
   departAt: string
   durationMin: number
   confidence: Confidence
+  /** How sure the planner is that this arrival holds, 0-100. */
+  confidencePct: number
   energy: EnergyLevel
   weatherRisk: WeatherRisk
   transfers: number

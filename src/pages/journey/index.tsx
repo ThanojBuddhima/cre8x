@@ -2,8 +2,10 @@ import { useEffect } from 'react'
 import { TriangleAlert } from 'lucide-react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { JourneyTimeline } from '@/components/journey/JourneyTimeline'
+import { WhatIfPanel } from '@/components/journey/WhatIfPanel'
 import { WhyPanel } from '@/components/journey/WhyPanel'
 import { AlertBanner } from '@/components/live/AlertBanner'
+import { EmergencyPanel } from '@/components/live/EmergencyPanel'
 import { ArrivalCard } from '@/components/live/ArrivalCard'
 import { LiveHud } from '@/components/live/LiveHud'
 import { Button } from '@/components/ui/button'
@@ -89,6 +91,7 @@ export function JourneyDetails() {
         ) : (
           <LiveHud journey={journey} progress={liveProgress} />
         )}
+        <EmergencyPanel />
         {disruptionShown && !arrived ? (
           <AlertBanner
             onAccept={() => {
@@ -135,6 +138,7 @@ export function JourneyDetails() {
           </div>
         </section>
         <WhyPanel journey={journey} />
+        <WhatIfPanel journey={journey} />
         {alternatives.length ? (
           <div>
             <h2 className="text-sm font-medium text-paper">Other options</h2>

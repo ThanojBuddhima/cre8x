@@ -25,6 +25,32 @@ function weatherPenalty(journey: Journey, scenario: DemoScenario) {
   return 0
 }
 
+/** Rewards routes that hold up when the weather turns. */
+function resilienceScore(journey: Journey) {
+  let score = 0
+  if (!journey.usesCoastalRoad) score += 10
+  if (journey.weatherRisk === 'Low') score += 12
+  else if (journey.weatherRisk === 'Medium') score += 4
+  if (journey.confidencePct >= 90) score += 6
+  return score
+}
+
+/**
+ * Confidence is not a fixed property of a route: it drops when the weather
+ * threatens the corridor it uses, and when a leg is already running late.
+ */
+function adjustedConfidence(journey: Journey, input: PlanInput) {
+  let pct = journey.confidencePct
+  if (input.scenario !== 'normal') {
+    if (journey.usesCoastalRoad) pct -= 28
+    else if (journey.weatherRisk === 'High') pct -= 16
+    else if (journey.weatherRisk === 'Medium') pct -= 7
+  }
+  const delay = journey.legs.reduce((sum, leg) => sum + (leg.delayMin ?? 0), 0)
+  pct -= delay * 2
+  return Math.max(35, Math.min(99, Math.round(pct)))
+}
+
 function scoreJourney(journey: Journey, input: PlanInput) {
   let score = 50
   const accessNeed =
@@ -35,6 +61,7 @@ function scoreJourney(journey: Journey, input: PlanInput) {
   if (input.preference === 'fastest') score += 40 - journey.durationMin
   if (input.preference === 'energy') score += energyScore(journey.energy) * 8
   if (input.preference === 'calm') score += 12 - journey.transfers * 4
+  if (input.preference === 'resilient') score += resilienceScore(journey)
 
   if (accessNeed) {
     score += journey.stairs === 0 ? 30 : -journey.stairs * 4
@@ -135,6 +162,7 @@ export function planJourneys(input: PlanInput): Journey[] {
 
   return limited.map((journey, index) => ({
     ...retarget(journey, input),
+    confidencePct: adjustedConfidence(journey, input),
     recommended: index === 0,
     name: index === 0 ? 'Recommended' : journey.tag,
   }))

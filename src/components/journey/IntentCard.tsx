@@ -4,6 +4,7 @@ import {
   ArrowUpDown,
   BatteryCharging,
   ChevronDown,
+  ShieldCheck,
   Wind,
   Zap,
 } from 'lucide-react'
@@ -49,6 +50,12 @@ const preferences: {
     label: 'Low energy',
     hint: 'Bus and rail first. Air only when nothing else works.',
     icon: BatteryCharging,
+  },
+  {
+    id: 'resilient',
+    label: 'Resilient',
+    hint: 'Stays clear of flood-risk roads, even if it takes a little longer.',
+    icon: ShieldCheck,
   },
 ]
 

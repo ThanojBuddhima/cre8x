@@ -30,12 +30,45 @@ export function WhyPanel({ journey }: { journey: Journey }) {
           <dd className="mt-1 text-paper">{journey.transfers}</dd>
         </div>
       </dl>
-      <p className="mt-3 text-sm text-muted">
-        Confidence: {journey.confidence}
-        {journey.stairs === 0
-          ? ' · 0 stairs · 1 level transfer'
-          : ` · ${journey.stairs} stairs`}
-      </p>
+      <div className="mt-5">
+        <div className="flex items-baseline justify-between gap-2">
+          <p className="text-sm text-muted">Confidence in this arrival</p>
+          <p className="text-sm font-medium text-paper">
+            {journey.confidencePct}%
+            <span className="ml-1.5 text-xs text-dim">
+              {journey.confidence.toLowerCase()}
+            </span>
+          </p>
+        </div>
+        <div
+          className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-surface"
+          role="img"
+          aria-label={
+            'Confidence ' +
+            journey.confidencePct +
+            ' percent, ' +
+            journey.confidence.toLowerCase()
+          }
+        >
+          <span
+            className="block h-full rounded-full transition-[width] duration-[var(--dur-ui)]"
+            style={{
+              width: journey.confidencePct + '%',
+              background:
+                journey.confidencePct >= 85
+                  ? 'var(--color-accent)'
+                  : journey.confidencePct >= 65
+                    ? 'var(--color-warning)'
+                    : 'var(--color-danger)',
+            }}
+          />
+        </div>
+        <p className="mt-2 text-sm text-muted">
+          {journey.stairs === 0
+            ? '0 stairs on this route, with level boarding at every change.'
+            : journey.stairs + ' stairs on this route.'}
+        </p>
+      </div>
     </section>
   )
 }
