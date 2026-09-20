@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Inspector } from '@/components/city/Inspector'
 import { LayerToggles } from '@/components/city/LayerToggles'
+import { MapLegend } from '@/components/city/MapLegend'
 import { LocationChip } from '@/components/city/LocationChip'
 import { MapControls } from '@/components/city/MapControls'
 import { QualityGate } from '@/components/3d/map/QualityGate'
@@ -61,6 +62,14 @@ export function LiveTracking() {
               </div>
             </button>
             <Inspector />
+          </div>
+          <div
+            className="pointer-events-none absolute left-3 max-w-[58%] md:left-6"
+            style={{ bottom: 'calc(var(--dock-h) + 12px)' }}
+          >
+            <div className="glass rounded-xl px-3 py-2">
+              <MapLegend />
+            </div>
           </div>
           <div
             className="pointer-events-none absolute right-3 md:right-6"

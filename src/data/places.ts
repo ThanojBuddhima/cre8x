@@ -29,6 +29,20 @@ export const places: Place[] = [
     kind: 'campus',
     hint: 'Arrive before class',
   },
+  {
+    id: 'home',
+    name: 'Home · Nugegoda',
+    shortName: 'Home',
+    kind: 'interchange',
+    hint: 'Your saved home address',
+  },
+  {
+    id: 'airport',
+    name: 'Katunayake Airport',
+    shortName: 'Airport',
+    kind: 'vertiport',
+    hint: 'Air and rail interchange',
+  },
 ]
 
 export function getPlace(id: string): Place {

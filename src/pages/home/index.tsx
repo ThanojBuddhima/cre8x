@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { CityStatusChip } from '@/components/city/CityStatusChip'
+import { ModeRow } from '@/components/city/ModeRow'
 import { IntentCard } from '@/components/journey/IntentCard'
 import { JourneyList } from '@/components/journey/JourneyList'
 import { QuickJourneyCard } from '@/components/journey/QuickJourneyCard'
@@ -42,6 +44,8 @@ export function LandingHome() {
               onExpand={() => {}}
               onPlanned={() => setPlanned(true)}
             />
+            <CityStatusChip />
+            <ModeRow />
           </div>
         )}
       </div>

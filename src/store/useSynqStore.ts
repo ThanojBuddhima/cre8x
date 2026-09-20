@@ -15,8 +15,11 @@ import { detectQuality, prefersReducedMotion } from '@/services/quality'
 
 function readTheme(): ThemeMode {
   if (typeof window === 'undefined') return 'dark'
-  window.localStorage.setItem('synq-theme', 'dark')
-  return 'dark'
+  const saved = window.localStorage.getItem('synq-theme')
+  if (saved === 'light' || saved === 'dark') return saved
+  return window.matchMedia('(prefers-color-scheme: light)').matches
+    ? 'light'
+    : 'dark'
 }
 
 export interface SynqState {
@@ -128,9 +131,9 @@ export const useSynqStore = create<SynqState>((set) => ({
       calmMode,
       quality: calmMode ? 'FALLBACK' : detectQuality(),
     }),
-  setTheme: (_theme) => {
-    window.localStorage.setItem('synq-theme', 'dark')
-    set({ theme: 'dark' })
+  setTheme: (theme) => {
+    window.localStorage.setItem('synq-theme', theme)
+    set({ theme })
   },
   setIntroComplete: (introComplete) => set({ introComplete }),
   setIntroProgress: (introProgress) => set({ introProgress }),

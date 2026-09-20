@@ -11,6 +11,7 @@ export function Providers({ children }: { children: ReactNode }) {
   const setCalmMode = useSynqStore((s) => s.setCalmMode)
   const setScenario = useSynqStore((s) => s.setScenario)
   const calmMode = useSynqStore((s) => s.calmMode)
+  const theme = useSynqStore((s) => s.theme)
   const [params] = useSearchParams()
   useAppGlow()
   useLiveClock()
@@ -30,9 +31,11 @@ export function Providers({ children }: { children: ReactNode }) {
   }, [calmMode])
 
   useEffect(() => {
-    document.documentElement.classList.add('dark')
-    window.localStorage.setItem('synq-theme', 'dark')
-  }, [])
+    document.documentElement.classList.toggle('dark', theme === 'dark')
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute('content', theme === 'dark' ? '#070b10' : '#f4f6f8')
+  }, [theme])
 
   useEffect(() => {
     const value = params.get('scenario')

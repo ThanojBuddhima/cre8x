@@ -1,3 +1,4 @@
+import { AiBadge } from '@/components/ui/ai-badge'
 import { Button } from '@/components/ui/button'
 import { useSynqStore } from '@/store/useSynqStore'
 
@@ -25,7 +26,8 @@ export function AlertBanner({
       role="status"
       aria-live="assertive"
     >
-      <p className="text-sm font-medium text-warning">{title}</p>
+      <AiBadge label="Rebooked for you" />
+      <p className="mt-2 text-sm font-medium text-warning">{title}</p>
       <p className="mt-1 text-sm text-paper">{body}</p>
       <div className="mt-3 flex flex-wrap gap-2">
         <Button size="sm" onClick={onAccept}>

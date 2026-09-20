@@ -17,7 +17,7 @@ export function MapLegend() {
           </span>
         ))}
       </div>
-      <p className="mt-1 text-[10px] text-dim">Hop = vertical change</p>
+      <p className="mt-1 text-[11px] text-dim">Colour shows how you travel</p>
     </div>
   )
 }

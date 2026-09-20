@@ -1,9 +1,13 @@
+import { AiBadge } from '@/components/ui/ai-badge'
 import type { Journey } from '@/types'
 
 export function WhyPanel({ journey }: { journey: Journey }) {
   return (
     <section>
-      <h2 className="text-xs tracking-[0.16em] text-dim">WHY THIS JOURNEY</h2>
+      <div className="flex flex-wrap items-center gap-2">
+        <h2 className="text-xs tracking-[0.16em] text-dim">WHY THIS JOURNEY</h2>
+        <AiBadge />
+      </div>
       <ul className="mt-3 space-y-2 text-sm text-muted">
         {journey.reasons.slice(0, 3).map((reason) => (
           <li key={reason} className="flex gap-2">

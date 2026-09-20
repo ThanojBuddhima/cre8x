@@ -1,9 +1,9 @@
 import { Link, Outlet } from 'react-router-dom'
-import { MapLegend } from '@/components/city/MapLegend'
 import { BottomDock } from '@/components/navigation/BottomDock'
 import { DemoMenu } from '@/components/navigation/DemoMenu'
 import { ModeTag } from '@/components/navigation/ModeTag'
 import { ModeWash } from '@/components/navigation/ModeWash'
+import { ThemeToggle } from '@/components/navigation/ThemeToggle'
 import { useLiveJourney } from '@/hooks/useLiveJourney'
 
 export function AppShell() {
@@ -36,14 +36,14 @@ export function AppShell() {
               </span>
               <span className="text-sm tracking-[0.18em] text-paper">SYNQ</span>
             </Link>
-            <ModeTag />
+            <span className="max-[399px]:hidden">
+              <ModeTag />
+            </span>
           </div>
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <DemoMenu />
           </div>
-        </div>
-        <div className="mt-1 px-1">
-          <MapLegend />
         </div>
       </header>
       <Outlet />

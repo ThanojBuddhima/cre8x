@@ -38,6 +38,7 @@ function modeOffset(mode: TransportMode) {
   if (mode === 'rail') return { x: 0, y: 6.4 }
   if (mode === 'air') return { x: -5, y: 18 }
   if (mode === 'pod') return { x: -8, y: 0.55 }
+  if (mode === 'bus') return { x: -11, y: 0.55 }
   return { x: 2.4, y: 0.6 }
 }
 

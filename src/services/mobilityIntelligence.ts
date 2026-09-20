@@ -78,6 +78,18 @@ function withScenarioCopy(journey: Journey, input: PlanInput): Journey {
     }
   }
 
+  if (journey.id === 'j4') {
+    return {
+      ...journey,
+      weatherRisk: 'Low',
+      reasons: [
+        'Buses keep running in heavy rain.',
+        'This route never touches Coastal Road 04.',
+        'Slower, but the arrival time barely moves in a storm.',
+      ],
+    }
+  }
+
   return {
     ...journey,
     weatherRisk: 'High',
@@ -87,6 +99,28 @@ function withScenarioCopy(journey: Journey, input: PlanInput): Journey {
       'Faster if the corridor stays open.',
       'I would not choose this in a storm unless you ask.',
     ],
+  }
+}
+
+/**
+ * The mock pool is one Fort-to-KDU corridor. Rewriting the first and last leg
+ * endpoints keeps the itinerary coherent when the traveller picks somewhere
+ * else, without inventing a whole second network.
+ */
+function retarget(journey: Journey, input: PlanInput): Journey {
+  const last = journey.legs.length - 1
+  if (last < 0) return journey
+  return {
+    ...journey,
+    legs: journey.legs.map((leg, index) => {
+      if (index === 0 && leg.fromId !== input.originId) {
+        return { ...leg, fromId: input.originId }
+      }
+      if (index === last && leg.toId !== input.destinationId) {
+        return { ...leg, toId: input.destinationId }
+      }
+      return leg
+    }),
   }
 }
 
@@ -100,7 +134,7 @@ export function planJourneys(input: PlanInput): Journey[] {
   const limited = input.calmMode ? ranked.slice(0, 2) : ranked.slice(0, 3)
 
   return limited.map((journey, index) => ({
-    ...journey,
+    ...retarget(journey, input),
     recommended: index === 0,
     name: index === 0 ? 'Recommended' : journey.tag,
   }))

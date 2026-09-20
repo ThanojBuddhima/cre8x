@@ -1,4 +1,4 @@
-import { CloudRain, HeartPulse, Sparkles, Sun } from 'lucide-react'
+import { CloudRain, HeartPulse, RotateCcw, Sparkles, Sun } from 'lucide-react'
 import { useState } from 'react'
 import { Sheet } from '@/components/ui/sheet'
 import { useSynqStore } from '@/store/useSynqStore'
@@ -14,6 +14,7 @@ export function DemoMenu() {
   const [open, setOpen] = useState(false)
   const scenario = useSynqStore((s) => s.scenario)
   const setScenario = useSynqStore((s) => s.setScenario)
+  const resetLive = useSynqStore((s) => s.resetLive)
 
   return (
     <>
@@ -39,6 +40,7 @@ export function DemoMenu() {
                 type="button"
                 onClick={() => {
                   setScenario(item.id)
+                  resetLive()
                   setOpen(false)
                 }}
                 className={`pointer-events-auto flex h-12 items-center gap-3 rounded-md border px-3 text-left text-sm ${
@@ -53,6 +55,17 @@ export function DemoMenu() {
             )
           })}
         </div>
+        <button
+          type="button"
+          onClick={() => {
+            resetLive()
+            setOpen(false)
+          }}
+          className="pointer-events-auto mt-2 flex h-12 w-full items-center gap-3 rounded-md border border-hairline px-3 text-left text-sm text-paper"
+        >
+          <RotateCcw size={16} aria-hidden />
+          Replay journey from the start
+        </button>
       </Sheet>
     </>
   )
