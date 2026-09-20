@@ -17,6 +17,7 @@ function pointFor(id: string, mode: string) {
   if (mode === 'rail') return { x: hub.x, y: hub.y - 10 }
   if (mode === 'air') return { x: hub.x, y: hub.y - 28 }
   if (mode === 'pod') return { x: hub.x, y: hub.y + 12 }
+  if (mode === 'bus') return { x: hub.x, y: hub.y + 24 }
   return { x: hub.x, y: hub.y }
 }
 

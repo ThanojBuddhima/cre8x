@@ -1,14 +1,18 @@
 import { useEffect } from 'react'
+import { TriangleAlert } from 'lucide-react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { JourneyTimeline } from '@/components/journey/JourneyTimeline'
+import { WhatIfPanel } from '@/components/journey/WhatIfPanel'
 import { WhyPanel } from '@/components/journey/WhyPanel'
 import { AlertBanner } from '@/components/live/AlertBanner'
+import { EmergencyPanel } from '@/components/live/EmergencyPanel'
 import { ArrivalCard } from '@/components/live/ArrivalCard'
 import { LiveHud } from '@/components/live/LiveHud'
 import { Button } from '@/components/ui/button'
 import { getJourney, journeys } from '@/data/journeys'
 import { getPlace } from '@/data/places'
 import { modeColor, modeShortLabel } from '@/lib/modeColors'
+import { liveArrival, toMinutes } from '@/lib/time'
 import { useSynqStore } from '@/store/useSynqStore'
 
 export function JourneyDetails() {
@@ -44,6 +48,9 @@ export function JourneyDetails() {
     (item) => item.id !== journey.id,
   )
   const liveOnThisTrip = liveProgress > 0 && !arrived
+  const live = liveArrival(journey)
+  const target = useSynqStore.getState().intent.arriveBy
+  const beatsTarget = toMinutes(live.arriveAt) <= toMinutes(target)
 
   return (
     <main
@@ -56,12 +63,26 @@ export function JourneyDetails() {
     >
       <p className="text-sm font-medium tracking-[0.14em] text-dim">JOURNEY</p>
       <h1 className="mt-2 font-serif text-3xl text-paper md:text-4xl">
-        You’ll arrive at {journey.arriveAt}
+        You’ll arrive at {live.arriveAt}
       </h1>
+      {live.lateBy > 0 ? (
+        <p
+          className="mt-2 inline-flex flex-wrap items-center gap-1.5 rounded-full border border-warning/40 bg-warning/10 px-3 py-1.5 text-sm font-medium text-warning"
+          aria-live="polite"
+        >
+          <TriangleAlert size={14} aria-hidden />
+          {live.lateBy} min later than planned ({journey.arriveAt})
+        </p>
+      ) : null}
       <p className="mt-2 text-sm text-muted">
         {getPlace(journey.legs[0]?.fromId ?? 'fort').shortName} to{' '}
         {getPlace(journey.legs[journey.legs.length - 1]?.toId ?? 'kdu').shortName}{' '}
-        · {journey.durationMin} min
+        · {journey.durationMin + live.lateBy} min
+      </p>
+      <p className="mt-1 text-sm text-muted">
+        {beatsTarget
+          ? `Still before your ${target} target.`
+          : `This is after your ${target} target. Try another option below.`}
       </p>
 
       <div className="mt-4 grid gap-3">
@@ -70,6 +91,7 @@ export function JourneyDetails() {
         ) : (
           <LiveHud journey={journey} progress={liveProgress} />
         )}
+        <EmergencyPanel />
         {disruptionShown && !arrived ? (
           <AlertBanner
             onAccept={() => {
@@ -116,6 +138,7 @@ export function JourneyDetails() {
           </div>
         </section>
         <WhyPanel journey={journey} />
+        <WhatIfPanel journey={journey} />
         {alternatives.length ? (
           <div>
             <h2 className="text-sm font-medium text-paper">Other options</h2>

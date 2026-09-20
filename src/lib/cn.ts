@@ -7,6 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function modeLabel(mode: string) {
+  if (mode === 'bus') return 'Autonomous bus'
   if (mode === 'pod') return 'Autonomous pod'
   if (mode === 'rail') return 'Autonomous rail'
   if (mode === 'air') return 'Air shuttle'

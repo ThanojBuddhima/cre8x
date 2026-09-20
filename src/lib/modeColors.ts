@@ -2,6 +2,7 @@ import type { JourneyLeg, ThemeMode, TransportMode } from '@/types'
 
 const dark: Record<TransportMode, string> = {
   walk: '#ff8a1a',
+  bus: '#fbbf24',
   pod: '#4f8cff',
   rail: '#2ee6a6',
   air: '#c77dff',
@@ -9,15 +10,17 @@ const dark: Record<TransportMode, string> = {
 
 const light: Record<TransportMode, string> = {
   walk: '#e85d04',
+  bus: '#a16207',
   pod: '#1d4ed8',
   rail: '#0f8f7a',
   air: '#7c3aed',
 }
 
 export const MODE_LEGEND: { mode: TransportMode; label: string; hint: string }[] = [
-  { mode: 'pod', label: 'Smart road', hint: 'Shared pods on coastal roads' },
-  { mode: 'rail', label: 'Rail', hint: 'Autonomous trains between hubs' },
+  { mode: 'bus', label: 'Auto-bus', hint: 'Driverless buses on city streets' },
+  { mode: 'rail', label: 'Auto-rail', hint: 'Driverless trains between hubs' },
   { mode: 'air', label: 'Air', hint: 'Short shuttles above the corridor' },
+  { mode: 'pod', label: 'Smart road', hint: 'Shared pods on managed roads' },
   { mode: 'walk', label: 'Walk', hint: 'Short links at each hub' },
 ]
 
@@ -40,8 +43,9 @@ export function transferColor(theme: ThemeMode) {
 }
 
 export function modeShortLabel(mode: TransportMode) {
+  if (mode === 'bus') return 'Auto-bus'
   if (mode === 'pod') return 'Smart road'
-  if (mode === 'rail') return 'Rail'
+  if (mode === 'rail') return 'Auto-rail'
   if (mode === 'air') return 'Air'
   return 'Walk'
 }
@@ -62,8 +66,9 @@ export function trackingSentence(
   nextPlaceName?: string,
 ) {
   let here = 'You are walking.'
+  if (now.mode === 'bus') here = 'You are on a driverless bus.'
   if (now.mode === 'pod') here = 'You are on a smart-road pod.'
-  if (now.mode === 'rail') here = 'You are on a rail train.'
+  if (now.mode === 'rail') here = 'You are on a driverless train.'
   if (now.mode === 'air') here = 'You are on an air shuttle.'
   if (now.mode === 'walk') here = `You are walking (${now.vehicleName}).`
   if (!upcoming) return `${here} This is the last part of the trip.`

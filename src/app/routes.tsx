@@ -7,7 +7,7 @@ import { LiveTracking } from '@/pages/live'
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Providers>
         <Routes>
           <Route element={<AppShell />}>

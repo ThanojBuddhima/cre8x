@@ -193,3 +193,31 @@ html.reduce-motion .mode-wash {
     scroll-behavior: auto !important;
   }
 }
+
+.leaflet-container {
+  font-family: var(--font-sans);
+  background: var(--map-sky);
+}
+
+.leaflet-container .leaflet-control-attribution {
+  margin-bottom: calc(var(--dock-h) - 1.5rem);
+  border-radius: 999px;
+  background: var(--glass-bg);
+  color: var(--color-paper);
+  font-size: 11px;
+  padding: 2px 8px;
+}
+
+.leaflet-container .leaflet-control-attribution a {
+  color: var(--color-accent);
+}
+
+.leaflet-container .leaflet-tooltip {
+  border: 1px solid var(--color-hairline);
+  background: var(--glass-bg);
+  color: var(--color-paper);
+  font-size: 11px;
+  font-weight: 600;
+  box-shadow: var(--shadow-glass);
+  backdrop-filter: blur(12px);
+}

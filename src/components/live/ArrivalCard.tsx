@@ -1,8 +1,12 @@
+import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { GlassCard } from '@/components/ui/glass-card'
-import { Link } from 'react-router-dom'
+import { useSynqStore } from '@/store/useSynqStore'
 
 export function ArrivalCard() {
+  const resetLive = useSynqStore((s) => s.resetLive)
+  const navigate = useNavigate()
+
   return (
     <GlassCard className="pointer-events-auto w-full text-center md:max-w-sm">
       <p className="text-xs tracking-[0.2em] text-dim">ARRIVED</p>
@@ -10,8 +14,14 @@ export function ArrivalCard() {
       <p className="mt-2 text-sm text-muted">
         The network will wait nearby if you need a return journey.
       </p>
-      <Button asChild className="mt-5 w-full">
-        <Link to="/">Plan another journey</Link>
+      <Button
+        className="mt-5 w-full"
+        onClick={() => {
+          resetLive()
+          navigate('/')
+        }}
+      >
+        Plan another journey
       </Button>
     </GlassCard>
   )

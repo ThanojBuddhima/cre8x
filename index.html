@@ -10,6 +10,20 @@
       content="SYNQ is Colombo’s mobility operating system for 2100. Say where you need to be. The city moves you."
     />
     <title>SYNQ — Mobility OS</title>
+    <script>
+      // Apply the saved theme before first paint so there is no flash.
+      try {
+        var saved = localStorage.getItem('synq-theme')
+        var dark =
+          saved === 'dark' ||
+          (saved !== 'light' &&
+            !window.matchMedia('(prefers-color-scheme: light)').matches)
+        document.documentElement.classList.toggle('dark', dark)
+        document
+          .querySelector('meta[name="theme-color"]')
+          .setAttribute('content', dark ? '#070b10' : '#f4f6f8')
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

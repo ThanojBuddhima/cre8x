@@ -2,9 +2,10 @@ import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Inspector } from '@/components/city/Inspector'
 import { LayerToggles } from '@/components/city/LayerToggles'
+import { MapLegend } from '@/components/city/MapLegend'
 import { LocationChip } from '@/components/city/LocationChip'
 import { MapControls } from '@/components/city/MapControls'
-import { QualityGate } from '@/components/3d/map/QualityGate'
+import { LiveMapGate } from '@/components/city/LiveMapGate'
 import { MapSplitLayout } from '@/components/navigation/MapSplitLayout'
 import { useLiveJourney } from '@/hooks/useLiveJourney'
 import { useSynqStore } from '@/store/useSynqStore'
@@ -24,9 +25,7 @@ export function LiveTracking() {
 
   return (
     <MapSplitLayout
-      map={
-        <QualityGate variant="live" journey={journey} progress={progress} />
-      }
+      map={<LiveMapGate journey={journey} progress={progress} />}
       overlay={
         <>
           <p className="sr-only" aria-live="polite">
@@ -61,6 +60,14 @@ export function LiveTracking() {
               </div>
             </button>
             <Inspector />
+          </div>
+          <div
+            className="pointer-events-none absolute left-3 max-w-[58%] md:left-6"
+            style={{ bottom: 'calc(var(--dock-h) + 12px)' }}
+          >
+            <div className="glass rounded-xl px-3 py-2">
+              <MapLegend />
+            </div>
           </div>
           <div
             className="pointer-events-none absolute right-3 md:right-6"

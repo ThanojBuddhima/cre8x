@@ -1,5 +1,10 @@
-export type TransportMode = 'walk' | 'pod' | 'rail' | 'air'
-export type Preference = 'fastest' | 'calm' | 'accessible' | 'energy'
+export type TransportMode = 'walk' | 'bus' | 'pod' | 'rail' | 'air'
+export type Preference =
+  | 'fastest'
+  | 'calm'
+  | 'accessible'
+  | 'energy'
+  | 'resilient'
 export type DemoScenario = 'normal' | 'rain' | 'emergency'
 export type QualityLevel = 'HIGH' | 'MEDIUM' | 'LOW' | 'FALLBACK'
 export type Confidence = 'High' | 'Medium' | 'Low'
@@ -16,6 +21,8 @@ export interface Place {
   shortName: string
   kind: 'hub' | 'interchange' | 'vertiport' | 'campus'
   hint: string
+  lat: number
+  lng: number
 }
 
 export interface AccessibilityProfile {
@@ -36,6 +43,8 @@ export interface JourneyLeg {
   accessibilityNote: string
   stairs: number
   usesCoastalRoad?: boolean
+  /** Live running delay in minutes, surfaced on the journey screen. */
+  delayMin?: number
 }
 
 export interface Journey {
@@ -46,6 +55,8 @@ export interface Journey {
   departAt: string
   durationMin: number
   confidence: Confidence
+  /** How sure the planner is that this arrival holds, 0-100. */
+  confidencePct: number
   energy: EnergyLevel
   weatherRisk: WeatherRisk
   transfers: number
@@ -83,11 +94,21 @@ export interface CorridorInfo {
   energy: string
 }
 
+export interface CityMetric {
+  id: string
+  label: string
+  /** 0-100. */
+  value: number
+  /** Energy reserve reads well when high; load and risk read well when low. */
+  higherIsBetter?: boolean
+}
+
 export interface CityStatus {
   weatherLabel: string
   weatherDetail: string
   networkHealth: string
   alert: string | null
+  metrics: CityMetric[]
 }
 
 export interface InspectorTarget {

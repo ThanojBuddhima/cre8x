@@ -1,6 +1,8 @@
+import { Clock } from 'lucide-react'
 import { getPlace } from '@/data/places'
 import { currentLeg, nextLeg } from '@/lib/journeyProgress'
 import { modeColor, modeShortLabel, trackingSentence, transferPrompt } from '@/lib/modeColors'
+import { useSynqStore } from '@/store/useSynqStore'
 import type { Journey } from '@/types'
 
 export { currentLeg, currentLegIndex, nextLeg } from '@/lib/journeyProgress'
@@ -12,6 +14,7 @@ export function LiveHud({
   journey: Journey
   progress: number
 }) {
+  const waiting = useSynqStore((s) => s.waitingState)
   const now = currentLeg(journey, progress)
   const upcoming = nextLeg(journey, progress)
   const from = getPlace(now.fromId)
@@ -40,6 +43,15 @@ export function LiveHud({
           }}
         />
       </p>
+      {waiting?.isWaiting ? (
+        <p
+          className="mt-3 flex items-center gap-2 rounded-md border border-hairline bg-surface px-3 py-2 text-sm text-paper"
+          aria-live="polite"
+        >
+          <Clock size={14} aria-hidden />
+          {waiting.label} is almost here — arriving in {waiting.countdown} min
+        </p>
+      ) : null}
       {upcoming && nextPlace ? (
         <p className="mt-3 text-sm font-medium" style={{ color: nextColor }}>
           {transferPrompt(upcoming, nextPlace.shortName)}

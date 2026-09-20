@@ -4,20 +4,25 @@
 
 SYNQ is a Round 01 frontend prototype for **Cre8X 3.0 — IMAGINE 2100**. It is a civic mobility operating system for Greater Colombo in 2100, featuring intent-based journeys, a seamless 3D mobility twin, and climate-aware rerouting.
 
-> 🏆 **Cre8X 3.0 Submission**  
+>  **Cre8X 3.0 Submission**  
 > *Note: This is a frontend-only prototype. Journey "intelligence" is handled by a deterministic local planner to guarantee a consistent demo experience for judges.*
 
 ---
 
-## ⚡ Features
+##  Features
 
-- **Intent-Based Planner**: Tell the system your destination and arrival time. The system calculates the optimum multi-modal route (Walk, Pod, Rail, Air).
-- **Live 3D Mobility Twin**: A gorgeous WebGL 3D representation of Colombo that tracks your live progress across the city map.
+- **Intent-Based Planner**: Tell the system your destination and arrival time. The system calculates the optimum multi-modal route (Walk, Auto-bus, Smart road, Auto-rail, Air).
+- **Scroll-driven 3D intro**: A four-act descent through the city's transport layers — Ground, Rail, Air, One Network — driven by GSAP ScrollTrigger over a WebGL twin of Colombo.
+- **Live map tracking**: Real Colombo basemap (Leaflet + OpenStreetMap via CARTO tiles) with each leg drawn in its own mode colour and the traveller interpolated along the route.
 - **Dynamic Climate Rerouting**: Simulates real-time disruptions (e.g., Heavy Rain, Emergencies). Watch the system instantly reroute you when Coastal Road 04 floods.
 - **Seamless 2D/3D Mode Transitions**: Need to save battery or prefer less motion? "Calm Mode" seamlessly cross-fades the 3D WebGL canvas into a clean, 2D interactive schematic map without losing your journey context.
 - **Micro-animations & Waiting States**: Real-time pulsing indicators and countdowns (e.g. "Pod is almost here... arriving in 10 min") keep you informed at every transfer hub.
+- **One-tap destinations**: KDU, Home and Airport plan an entire trip in a single tap, so nobody has to work through a form.
+- **What if?**: Simulate heavy rain or a city emergency and see how your arrival would change *before* it happens.
+- **City Pulse**: Live road, rail, air, energy and flood-risk readings for the whole network.
+- **Explainable confidence**: Every recommendation carries a confidence percentage that drops when a route uses a threatened corridor or a leg runs late.
 
-## 🚀 Run Locally
+##  Run Locally
 
 ```bash
 # Install dependencies
@@ -34,7 +39,7 @@ npm run build
 npm run preview
 ```
 
-## 🎥 Demo Script for Judges
+##  Demo Script for Judges
 
 The live demo path is a journey from **Colombo Fort Hub** to **KDU**, arriving by **08:30**, interrupted by a sudden rain disruption.
 
@@ -53,16 +58,17 @@ Open the **Demo** toggle in the map header to open the Demo Controls sheet. Here
 - `/journey/j2` — accessible itinerary
 - `/live/j1` — live tracking
 
-## 🛠 Tech Stack
+##  Tech Stack
 
 Built for maximum performance, fluid animations, and robust state management:
 - **Core**: Vite, React 19, TypeScript
 - **Styling**: Tailwind CSS v4, Vanilla CSS (for complex dynamic variables)
 - **State & Routing**: Zustand, React Router
-- **3D & Animation**: Three.js, React Three Fiber, Drei, GSAP ScrollTrigger, Motion
+- **3D & Animation**: Three.js, React Three Fiber, Drei, GSAP ScrollTrigger
+- **Maps**: Leaflet, React Leaflet, OpenStreetMap (CARTO tiles)
 - **UI**: Radix UI
 
-## ♿ Accessibility
+##  Accessibility
 
 - Keyboard and visible focus support across all elements.
 - Skip link to bypass the cinematic and jump straight to the planner.
@@ -72,19 +78,21 @@ Built for maximum performance, fluid animations, and robust state management:
 - Status and alerts are never color-only (icons and text are always present).
 - Live ETA and reroutes are announced to screen readers.
 
-## ☁️ Deploy
+##  Deploy
 
-The app is a static Vite SPA. `vercel.json` rewrites client routes to `index.html`.
+The app is a static Vite SPA deployed to **GitHub Pages** by
+[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) on every push to
+`main`. The build sets `base: '/cre8x/'` and `scripts/spa-fallback.mjs` writes a
+`404.html` copy of `index.html`, so client-side deep links resolve.
+
+To publish: enable **Settings → Pages → Source: GitHub Actions**, then push to
+`main`.
 
 ```bash
-# Log in first if you have no credentials
-npx vercel login
-
-# Deploy to Vercel
-npx vercel --yes --prod
+npm run build   # also emits dist/404.html and dist/.nojekyll
 ```
 
-## 📄 Documentation & Assets
+##  Documentation & Assets
 
 - [docs/COMPETITION.md](docs/COMPETITION.md) — written brief
 - [docs/SYNQ-Round-01.pdf](docs/SYNQ-Round-01.pdf) — printable PDF

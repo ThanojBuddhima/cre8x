@@ -6,11 +6,14 @@ import { defineConfig } from 'vite'
 
 const rootDir = path.dirname(fileURLToPath(import.meta.url))
 
-export default defineConfig({
+// GitHub Pages serves this project at /cre8x/, so the production build needs
+// that prefix. Dev stays at / so local URLs are unchanged.
+export default defineConfig(({ command }) => ({
+  base: command === 'build' ? '/cre8x/' : '/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
       '@': path.resolve(rootDir, './src'),
     },
   },
-})
+}))

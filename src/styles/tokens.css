@@ -11,6 +11,7 @@
   --color-accent: var(--glow, #e85d04);
   --color-accent-dim: color-mix(in srgb, var(--glow, #e85d04) 16%, transparent);
   --color-mode-walk: var(--mode-walk, #e85d04);
+  --color-mode-bus: var(--mode-bus, #a16207);
   --color-mode-pod: var(--mode-pod, #1d4ed8);
   --color-mode-rail: var(--mode-rail, #0f8f7a);
   --color-mode-air: var(--mode-air, #7c3aed);
@@ -49,6 +50,7 @@
   --map-road: #c5ced6;
   --map-you: #e85d04;
   --mode-walk: #e85d04;
+  --mode-bus: #a16207;
   --mode-pod: #1d4ed8;
   --mode-rail: #0f8f7a;
   --mode-air: #7c3aed;
@@ -86,6 +88,7 @@ html.dark {
   --map-road: #3a4958;
   --map-you: #ff8a1a;
   --mode-walk: #ff8a1a;
+  --mode-bus: #fbbf24;
   --mode-pod: #4f8cff;
   --mode-rail: #2ee6a6;
   --mode-air: #c77dff;
