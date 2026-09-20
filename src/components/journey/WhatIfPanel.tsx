@@ -71,7 +71,7 @@ export function WhatIfPanel({ journey }: { journey: Journey }) {
   return (
     <section aria-labelledby="what-if">
       <div className="flex flex-wrap items-center gap-2">
-        <h2 id="what-if" className="text-xs tracking-[0.16em] text-dim">
+        <h2 id="what-if" className="text-xs tracking-[0.16em] text-muted">
           WHAT IF?
         </h2>
         <AiBadge label="Predictive" />
@@ -99,14 +99,14 @@ export function WhatIfPanel({ journey }: { journey: Journey }) {
 
       {simulated && then ? (
         <div
-          className="glass mt-4 rounded-xl p-4"
+          className="neu-raised mt-4 rounded-xl p-4"
           role="status"
           aria-live="polite"
         >
           <div className="flex items-baseline justify-between gap-3">
             <div>
-              <p className="text-xs tracking-[0.14em] text-dim">NOW</p>
-              <p className="mt-1 text-2xl font-medium text-paper">
+              <p className="text-xs tracking-[0.14em] text-muted">NOW</p>
+              <p className="mt-1 text-2xl font-medium text-ink">
                 {now.arriveAt}
               </p>
             </div>
@@ -114,17 +114,17 @@ export function WhatIfPanel({ journey }: { journey: Journey }) {
               →
             </span>
             <div className="text-right">
-              <p className="text-xs tracking-[0.14em] text-dim">SIMULATED</p>
-              <p className="mt-1 text-2xl font-medium text-accent">
+              <p className="text-xs tracking-[0.14em] text-muted">SIMULATED</p>
+              <p className="mt-1 text-2xl font-medium text-accent-ink">
                 {then.arriveAt}
               </p>
             </div>
           </div>
 
-          <p className="mt-3 text-sm text-paper">
+          <p className="mt-3 text-sm text-ink">
             {changesRoute
               ? `I would move you to the ${simulated.tag.toLowerCase()} route.`
-              : 'I would keep you on this route.'}{' '}
+              : 'I would keep you on this route.'}{''}
             {deltaMin === 0
               ? 'You would still arrive at the same time.'
               : deltaMin > 0

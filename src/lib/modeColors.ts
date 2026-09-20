@@ -39,7 +39,7 @@ export function glowColor(glow: GlowId, theme: ThemeMode) {
 }
 
 export function transferColor(theme: ThemeMode) {
-  return theme === 'light' ? '#1b2430' : '#f4f7fa'
+  return theme === 'light' ? '#3D4852' : '#E2E6EC'
 }
 
 export function modeShortLabel(mode: TransportMode) {

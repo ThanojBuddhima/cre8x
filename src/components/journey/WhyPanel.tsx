@@ -5,7 +5,7 @@ export function WhyPanel({ journey }: { journey: Journey }) {
   return (
     <section>
       <div className="flex flex-wrap items-center gap-2">
-        <h2 className="text-xs tracking-[0.16em] text-dim">WHY THIS JOURNEY</h2>
+        <h2 className="text-xs tracking-[0.16em] text-muted">WHY THIS JOURNEY</h2>
         <AiBadge />
       </div>
       <ul className="mt-3 space-y-2 text-sm text-muted">
@@ -16,37 +16,37 @@ export function WhyPanel({ journey }: { journey: Journey }) {
           </li>
         ))}
       </ul>
-      <dl className="mt-5 grid grid-cols-3 gap-2 text-center text-sm">
-        <div className="rounded-md border border-hairline p-3">
-          <dt className="text-xs text-dim">Energy</dt>
-          <dd className="mt-1 text-paper">{journey.energy}</dd>
+      <dl className="mt-5 grid grid-cols-1 gap-2 text-center text-sm sm:grid-cols-3">
+        <div className="neu-sunken-sm rounded-lg p-3">
+          <dt className="text-xs text-muted">Energy</dt>
+          <dd className="mt-1 text-ink">{journey.energy}</dd>
         </div>
-        <div className="rounded-md border border-hairline p-3">
-          <dt className="text-xs text-dim">Weather</dt>
-          <dd className="mt-1 text-paper">{journey.weatherRisk}</dd>
+        <div className="neu-sunken-sm rounded-lg p-3">
+          <dt className="text-xs text-muted">Weather</dt>
+          <dd className="mt-1 text-ink">{journey.weatherRisk}</dd>
         </div>
-        <div className="rounded-md border border-hairline p-3">
-          <dt className="text-xs text-dim">Transfers</dt>
-          <dd className="mt-1 text-paper">{journey.transfers}</dd>
+        <div className="neu-sunken-sm rounded-lg p-3">
+          <dt className="text-xs text-muted">Transfers</dt>
+          <dd className="mt-1 text-ink">{journey.transfers}</dd>
         </div>
       </dl>
       <div className="mt-5">
         <div className="flex items-baseline justify-between gap-2">
           <p className="text-sm text-muted">Confidence in this arrival</p>
-          <p className="text-sm font-medium text-paper">
+          <p className="text-sm font-medium text-ink">
             {journey.confidencePct}%
-            <span className="ml-1.5 text-xs text-dim">
+            <span className="ml-1.5 text-xs text-muted">
               {journey.confidence.toLowerCase()}
             </span>
           </p>
         </div>
         <div
-          className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-surface"
+          className="mt-1.5 h-1.5 overflow-hidden rounded-full neu-sunken-sm"
           role="img"
           aria-label={
-            'Confidence ' +
+            'Confidence' +
             journey.confidencePct +
-            ' percent, ' +
+            'percent,' +
             journey.confidence.toLowerCase()
           }
         >
@@ -66,7 +66,7 @@ export function WhyPanel({ journey }: { journey: Journey }) {
         <p className="mt-2 text-sm text-muted">
           {journey.stairs === 0
             ? '0 stairs on this route, with level boarding at every change.'
-            : journey.stairs + ' stairs on this route.'}
+            : journey.stairs + 'stairs on this route.'}
         </p>
       </div>
     </section>

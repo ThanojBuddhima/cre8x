@@ -15,9 +15,27 @@ import { brandColor, modeColor } from '@/lib/modeColors'
 import { useSynqStore } from '@/store/useSynqStore'
 import type { Journey } from '@/types'
 
+/**
+ * CARTO basemaps. The key is read from VITE_CARTO_KEY rather than committed:
+ * this repo is public. It still ships in the client bundle, because a raster
+ * basemap is fetched by the browser and no client-side key can be hidden --
+ * restrict it by domain in the CARTO dashboard instead of relying on secrecy.
+ * Without a key these endpoints still serve tiles anonymously, so the map
+ * degrades rather than breaking.
+ */
+const CARTO_KEY = (
+  import.meta.env as unknown as Record<string, string | undefined>
+).VITE_CARTO_KEY
+
+function tileUrl(style: string) {
+  const base =
+    'https://basemaps.cartocdn.com/rastertiles/' + style + '/{z}/{x}/{y}.png'
+  return CARTO_KEY ? base + '?key=' + CARTO_KEY : base
+}
+
 const TILES = {
-  dark: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-  light: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+  dark: tileUrl('dark_all'),
+  light: tileUrl('voyager'),
 }
 const ATTRIBUTION =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
@@ -45,6 +63,28 @@ function positionAt(journey: Journey, progress: number): [number, number] {
   ]
 }
 
+/**
+ * Leaflet caches its container size, so a map sized off a 100dvh parent goes
+ * stale the moment the mobile URL bar collapses or the device rotates - the
+ * tile grid greys out until something else forces a redraw.
+ */
+function InvalidateOnResize() {
+  const map = useMap()
+
+  useEffect(() => {
+    const refresh = () => map.invalidateSize({ animate: false })
+    const observer = new ResizeObserver(refresh)
+    observer.observe(map.getContainer())
+    window.addEventListener('orientationchange', refresh)
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('orientationchange', refresh)
+    }
+  }, [map])
+
+  return null
+}
+
 /** Bridges the existing MapControls store commands to the Leaflet instance. */
 function MapCommands({ follow }: { follow: [number, number] }) {
   const map = useMap()
@@ -68,6 +108,15 @@ function MapCommands({ follow }: { follow: [number, number] }) {
   return null
 }
 
+/** Resolves a design token to a concrete colour, which SVG attributes need. */
+function readToken(name: string, fallback: string) {
+  if (typeof window === 'undefined') return fallback
+  const value = getComputedStyle(document.documentElement)
+    .getPropertyValue(name)
+    .trim()
+  return value || fallback
+}
+
 export function LeafletMap({
   journey,
   progress = 0,
@@ -79,7 +128,8 @@ export function LeafletMap({
   const layers = useSynqStore((s) => s.layers)
 
   const accent = brandColor(theme)
-  const surface = theme === 'light' ? '#f4f6f8' : '#070b10'
+  const surface = readToken('--neu-base', theme === 'light' ? '#E0E5EC' : '#2A2E35')
+  const hairline = readToken('--neu-light', '#ffffff')
 
   const you = useMemo(
     () => positionAt(journey, progress),
@@ -110,11 +160,12 @@ export function LeafletMap({
         className="h-full w-full"
         style={{ background: 'var(--map-sky)' }}
       >
+        <InvalidateOnResize />
         <TileLayer
           key={theme}
           url={theme === 'light' ? TILES.light : TILES.dark}
           attribution={ATTRIBUTION}
-          maxZoom={19}
+          maxZoom={20}
         />
 
         {journey.legs.map((leg) => {
@@ -174,7 +225,7 @@ export function LeafletMap({
           center={you}
           radius={7}
           pathOptions={{
-            color: '#ffffff',
+            color: hairline,
             weight: 2,
             fillColor: accent,
             fillOpacity: 1,

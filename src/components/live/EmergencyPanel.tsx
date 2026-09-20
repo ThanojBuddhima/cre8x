@@ -27,20 +27,20 @@ export function EmergencyPanel() {
 
   return (
     <section
-      className="glass rounded-lg p-4"
+      className="neu-raised rounded-2xl p-5"
       role="status"
       aria-live="polite"
       aria-label="City emergency response"
     >
       <div className="flex flex-wrap items-center gap-2">
-        <p className="inline-flex items-center gap-1.5 text-sm font-medium text-warning">
+        <p className="inline-flex items-center gap-1.5 text-sm font-medium text-warning-ink">
           <TriangleAlert size={15} aria-hidden />
           City emergency
         </p>
         <AiBadge label="Network response" />
       </div>
 
-      <p className="mt-2 text-sm text-paper">
+      <p className="mt-2 text-sm text-ink">
         Flooding in Sector 04. {affected} vehicles affected.
       </p>
 
@@ -50,7 +50,7 @@ export function EmergencyPanel() {
             <Check
               size={15}
               aria-hidden
-              className="mt-0.5 shrink-0 text-accent"
+              className="mt-0.5 shrink-0 text-accent-ink"
             />
             {action}
           </li>
@@ -61,12 +61,12 @@ export function EmergencyPanel() {
         {corridors.map((corridor) => (
           <div
             key={corridor.id}
-            className="flex items-center justify-between gap-3 rounded-md border border-hairline px-3 py-2"
+            className="neu-sunken-sm flex items-center justify-between gap-3 rounded-lg px-3 py-2"
           >
-            <dt className="min-w-0 flex-1 truncate text-sm text-paper">
+            <dt className="min-w-0 flex-1 truncate text-sm text-ink">
               {corridor.name}
             </dt>
-            <dd className="shrink-0 text-xs text-dim">
+            <dd className="shrink-0 text-xs text-muted">
               {corridor.congestion} load · {corridor.energy}
             </dd>
           </div>
@@ -77,11 +77,8 @@ export function EmergencyPanel() {
         {vehicles.map((vehicle) => (
           <li
             key={vehicle.id}
-            className="rounded-full border px-2.5 py-1 text-xs"
-            style={{
-              color: modeColor(vehicle.mode, theme),
-              borderColor: modeColor(vehicle.mode, theme),
-            }}
+            className="neu-sunken-sm rounded-full px-2.5 py-1 text-xs font-bold"
+            style={{ color: modeColor(vehicle.mode, theme) }}
           >
             {modeShortLabel(vehicle.mode)} · {vehicle.name} · {vehicle.status}
           </li>

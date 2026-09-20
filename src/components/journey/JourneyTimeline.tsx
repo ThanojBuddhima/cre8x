@@ -38,7 +38,7 @@ export function JourneyTimeline({ journey }: { journey: Journey }) {
             </div>
 
             <div className="pb-6">
-              <p className="text-xs text-dim">
+              <p className="text-xs text-muted">
                 {leg.departure}–{leg.arrival} · {leg.durationMin} min
               </p>
               <p className="mt-1 text-sm font-medium" style={{ color }}>
@@ -50,17 +50,17 @@ export function JourneyTimeline({ journey }: { journey: Journey }) {
               </p>
 
               {leg.delayMin ? (
-                <p className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-warning/40 bg-warning/10 px-2.5 py-1 text-xs font-medium text-warning">
+                <p className="mt-2 inline-flex items-center gap-1.5 rounded-full border bg-warning/10 px-2.5 py-1 text-xs font-medium text-warning-ink">
                   <TriangleAlert size={13} aria-hidden />
                   Running {leg.delayMin} min late
                 </p>
               ) : null}
 
-              <p className="mt-1 text-sm text-dim">{leg.accessibilityNote}</p>
+              <p className="mt-1 text-sm text-muted">{leg.accessibilityNote}</p>
 
               {transfer ? (
-                <div className="mt-3 rounded-md border border-hairline bg-surface px-3 py-2">
-                  <p className="flex items-center gap-1.5 text-xs font-medium text-paper">
+                <div className="mt-3 rounded-md neu-sunken-sm px-3 py-2">
+                  <p className="flex items-center gap-1.5 text-xs font-medium text-ink">
                     <ArrowRightLeft size={13} aria-hidden />
                     Change at {to.shortName}
                   </p>

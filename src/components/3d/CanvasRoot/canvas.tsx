@@ -19,7 +19,7 @@ export default function CanvasRoot({
   const theme = useSynqStore((s) => s.theme)
   const frozen = calmMode
   const dark = theme !== 'light'
-  const sky = dark ? '#0b1219' : '#e8eef2'
+  const sky = dark ? '#2A2E35' : '#E0E5EC'
 
   return (
     <div className="absolute inset-0 h-full w-full">

@@ -35,7 +35,10 @@ export function BottomDock() {
       style={{ paddingBottom: 'calc(10px + env(safe-area-inset-bottom))' }}
       aria-label="Main screens"
     >
-      <div className="pointer-events-auto glass flex w-full max-w-sm gap-1 rounded-full p-1 md:w-auto">
+      {/* The dock is the raised plane; the active tab is sunken into it.
+          Same pressed language as Chip, and it replaces the last neon glow
+          left over from the glassmorphism pass. */}
+      <div className="neu-raised pointer-events-auto flex w-full max-w-sm gap-1 rounded-full p-1.5 md:w-auto">
         {tabs.map((tab) => {
           const Icon = tab.icon
           const active = isTabActive(tab.id)
@@ -45,10 +48,11 @@ export function BottomDock() {
               to={tab.to}
               aria-current={active ? 'page' : undefined}
               className={cn(
-                'flex min-h-11 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-full px-4 py-1.5 text-[11px] font-medium tracking-[0.08em] md:min-w-[5.5rem]',
+                'flex min-h-11 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-full px-4 py-1.5 text-[11px] font-bold tracking-[0.08em]',
+                'transition-[box-shadow,color] duration-[var(--dur-ui)] ease-[var(--ease-out)] md:min-w-[5.5rem]',
                 active
-                  ? 'bg-accent text-on-accent shadow-[0_0_22px_color-mix(in_srgb,var(--glow)_55%,transparent)]'
-                  : 'text-dim hover:text-paper',
+                  ? 'shadow-[var(--neu-in-1)] text-accent-ink'
+                  : 'text-muted hoverable:text-ink',
               )}
             >
               <Icon size={16} strokeWidth={2.2} aria-hidden />

@@ -15,26 +15,27 @@ export function LiveHud({
   progress: number
 }) {
   const waiting = useSynqStore((s) => s.waitingState)
+  const theme = useSynqStore((s) => s.theme)
   const now = currentLeg(journey, progress)
   const upcoming = nextLeg(journey, progress)
   const from = getPlace(now.fromId)
   const remaining = Math.max(1, Math.round((1 - progress) * journey.durationMin))
-  const nowColor = modeColor(now.mode, 'dark')
-  const nextColor = upcoming ? modeColor(upcoming.mode, 'dark') : nowColor
+  const nowColor = modeColor(now.mode, theme)
+  const nextColor = upcoming ? modeColor(upcoming.mode, theme) : nowColor
   const nextPlace = upcoming ? getPlace(upcoming.fromId) : null
   const plain = trackingSentence(now, upcoming, nextPlace?.shortName)
 
   return (
-    <div className="pointer-events-auto glass w-full rounded-lg p-4 md:max-w-sm">
-      <p className="text-xs font-medium tracking-[0.12em] text-dim">YOU ARE HERE</p>
+    <div className="pointer-events-auto neu-raised w-full rounded-2xl p-5 md:max-w-sm">
+      <p className="text-xs font-medium tracking-[0.12em] text-muted">YOU ARE HERE</p>
       <p className="mt-1 text-lg font-medium">
         {from.shortName} · {modeShortLabel(now.mode)}
       </p>
-      <p className="mt-2 text-sm leading-snug text-paper">{plain}</p>
+      <p className="mt-2 text-sm leading-snug text-ink">{plain}</p>
       <p className="mt-2 text-sm text-muted">
         {now.vehicleName} · {remaining} min remaining
       </p>
-      <p className="mt-3 h-1 overflow-hidden rounded-full bg-surface">
+      <p className="mt-3 h-1 overflow-hidden rounded-full neu-sunken-sm">
         <span
           className="block h-full"
           style={{
@@ -45,7 +46,7 @@ export function LiveHud({
       </p>
       {waiting?.isWaiting ? (
         <p
-          className="mt-3 flex items-center gap-2 rounded-md border border-hairline bg-surface px-3 py-2 text-sm text-paper"
+          className="mt-3 flex items-center gap-2 rounded-lg neu-sunken-sm px-3 py-2 text-sm text-ink"
           aria-live="polite"
         >
           <Clock size={14} aria-hidden />

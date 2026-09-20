@@ -41,19 +41,19 @@ export function PlacePicker({
                 }}
                 aria-current={active ? 'true' : undefined}
                 className={cn(
-                  'flex w-full items-center gap-3 rounded-lg border px-4 py-3 text-left transition-colors duration-[var(--dur-micro)]',
+                  'flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left',
                   active
-                    ? 'border-accent bg-accent-dim'
-                    : 'border-hairline bg-surface hover:border-accent/40',
+                    ? 'neu-sunken-sm neu-scope-accent'
+                    : 'neu-row',
                 )}
               >
                 <MapPin
                   size={18}
                   aria-hidden
-                  className={active ? 'text-accent' : 'text-dim'}
+                  className={active ? 'text-accent-ink' : 'text-muted'}
                 />
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-base font-medium text-paper">
+                  <span className="block truncate text-base font-medium text-ink">
                     {place.name}
                   </span>
                   <span className="block truncate text-sm text-muted">
@@ -61,7 +61,7 @@ export function PlacePicker({
                   </span>
                 </span>
                 {active ? (
-                  <Check size={18} className="shrink-0 text-accent" aria-hidden />
+                  <Check size={18} className="shrink-0 text-accent-ink" aria-hidden />
                 ) : null}
               </button>
             </li>

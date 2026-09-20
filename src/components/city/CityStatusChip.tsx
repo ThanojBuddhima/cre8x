@@ -25,12 +25,12 @@ export function CityStatusChip() {
     <section className="mt-8" aria-labelledby="city-pulse">
       <h2
         id="city-pulse"
-        className="text-xs font-medium tracking-[0.16em] text-dim"
+        className="text-xs font-medium tracking-[0.16em] text-muted"
       >
         CITY PULSE
       </h2>
 
-      <div className="glass mt-3 rounded-xl">
+      <div className="neu-raised mt-3 rounded-xl">
         <button
           type="button"
           onClick={() => setOpen((value) => !value)}
@@ -48,7 +48,7 @@ export function CityStatusChip() {
             aria-hidden
           />
           <span className="min-w-0 flex-1">
-            <span className="block truncate text-base font-medium text-paper">
+            <span className="block truncate text-base font-medium text-ink">
               {status.weatherLabel}
             </span>
             <span className="block truncate text-sm text-muted">
@@ -66,10 +66,10 @@ export function CityStatusChip() {
         </button>
 
         {open ? (
-          <div className="border-t border-hairline px-4 py-3">
-            <p className="text-sm text-paper">{status.weatherDetail}</p>
+          <div className="px-4 py-3">
+            <p className="text-sm text-ink">{status.weatherDetail}</p>
             {status.alert ? (
-              <p className="mt-1 text-sm text-warning">{status.alert}</p>
+              <p className="mt-1 text-sm text-warning-ink">{status.alert}</p>
             ) : null}
 
             <dl className="mt-4 grid gap-3">
@@ -79,13 +79,13 @@ export function CityStatusChip() {
                   <div key={metric.id}>
                     <div className="flex items-baseline justify-between gap-2">
                       <dt className="text-sm text-muted">{metric.label}</dt>
-                      <dd className="text-sm font-medium text-paper">
+                      <dd className="text-sm font-medium text-ink">
                         {metric.value}%
-                        <span className="ml-1.5 text-xs text-dim">{t.word}</span>
+                        <span className="ml-1.5 text-xs text-muted">{t.word}</span>
                       </dd>
                     </div>
                     <div
-                      className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-surface"
+                      className="mt-1.5 h-1.5 overflow-hidden rounded-full neu-sunken-sm"
                       role="img"
                       aria-label={`${metric.label} ${metric.value} percent, ${t.word}`}
                     >

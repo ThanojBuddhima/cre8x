@@ -23,7 +23,7 @@ export function LayerToggles() {
 
   return (
     <div
-      className="pointer-events-auto glass flex max-w-full flex-wrap gap-1 rounded-full p-1"
+      className="pointer-events-auto neu-raised flex max-w-full flex-wrap gap-1 rounded-full p-1"
       role="group"
       aria-label="Transportation layers"
     >
@@ -35,17 +35,10 @@ export function LayerToggles() {
             key={layer.id}
             type="button"
             onClick={() => toggleLayer(layer.id)}
-            className={`h-10 rounded-full px-3 text-xs ${
-              on ? '' : 'text-dim hover:text-paper'
+            className={`h-11 rounded-full px-3 text-xs font-bold transition-[box-shadow,color] duration-[var(--dur-ui)] ease-[var(--ease-out)] ${
+              on ? 'shadow-[var(--neu-in-1)]' : 'text-muted hoverable:text-ink'
             }`}
-            style={
-              on
-                ? {
-                    color,
-                    background: `color-mix(in srgb, ${color} 18%, transparent)`,
-                  }
-                : undefined
-            }
+            style={on ? { color } : undefined}
             aria-pressed={on}
           >
             {layer.label}

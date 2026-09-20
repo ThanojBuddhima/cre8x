@@ -9,7 +9,7 @@ export function ThemeToggle() {
   return (
     <button
       type="button"
-      className="pointer-events-auto glass grid size-11 place-items-center rounded-full text-paper"
+      className="neu-pressable-sm pointer-events-auto grid size-11 place-items-center rounded-full text-muted hoverable:text-accent-ink"
       onClick={() => setTheme(next)}
       aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
     >

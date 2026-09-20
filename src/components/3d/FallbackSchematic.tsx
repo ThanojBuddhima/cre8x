@@ -42,7 +42,6 @@ export function FallbackSchematic({
   const setSchematicZoom = useSynqStore((s) => s.setSchematicZoom)
   const setSchematicOffset = useSynqStore((s) => s.setSchematicOffset)
   const drag = useRef<{ x: number; y: number } | null>(null)
-  const light = theme === 'light'
   const leg = journey ? currentLeg(journey, progress) : undefined
   const from = leg ? pointFor(leg.fromId, leg.mode) : hubs[0]!
   const to = leg ? pointFor(leg.toId, leg.mode) : hubs[hubs.length - 1]!
@@ -76,9 +75,8 @@ export function FallbackSchematic({
     <div
       className="absolute inset-0 touch-none"
       style={{
-        background: light
-          ? 'linear-gradient(#e8eef2, #d7e3ea)'
-          : 'linear-gradient(#0b1219, #16202a)',
+        background:
+          'linear-gradient(var(--neu-surface), var(--map-ground))',
       }}
       onPointerDown={(event) => {
         drag.current = { x: event.clientX, y: event.clientY }
@@ -118,7 +116,7 @@ export function FallbackSchematic({
         <path
           d="M10 20 C 40 80, 30 140, 18 198"
           fill="none"
-          stroke={light ? '#b9d0dc' : '#173044'}
+          stroke="var(--map-water)"
           strokeWidth="28"
         />
         {layers.ground ? (
@@ -218,12 +216,12 @@ export function FallbackSchematic({
               cx={hub.x}
               cy={hub.y}
               r="4"
-              fill={light ? '#1b2430' : '#f4f7fa'}
+              fill="var(--color-ink)"
             />
             <text
               x={hub.x + 8}
               y={hub.y + 4}
-              fill={light ? '#1b2430' : '#d5dde6'}
+              fill="var(--color-muted)"
               fontSize="9"
               fontWeight="600"
               fontFamily="inherit"

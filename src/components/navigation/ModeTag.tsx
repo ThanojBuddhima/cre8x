@@ -5,7 +5,7 @@ export function ModeTag() {
 
   return (
     <span
-      className="pointer-events-none inline-flex h-8 items-center rounded-full border px-2.5 text-[11px] font-medium tracking-[0.08em]"
+      className="neu-sunken-sm pointer-events-none inline-flex h-8 items-center rounded-full px-2.5 text-[11px] font-bold tracking-[0.08em]"
       style={{ color, borderColor: color }}
       data-mode={mode}
     >

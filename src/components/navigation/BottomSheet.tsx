@@ -16,29 +16,24 @@ export function BottomSheet({
 
   if (desktop) {
     return (
-      <div className="pointer-events-auto max-h-[calc(100dvh-6rem-var(--dock-h))] w-[min(100%,26rem)] overflow-y-auto rounded-xl p-5 pb-6 glass">
+      <div className="neu-raised pointer-events-auto max-h-[calc(100dvh-6rem-var(--dock-h))] w-[min(100%,26rem)] overflow-y-auto rounded-2xl p-5">
         {children}
       </div>
     )
   }
 
   return (
-    <div
-      className="pointer-events-auto flex flex-col rounded-t-xl border-t border-hairline glass"
-      style={{
-        paddingBottom: '0',
-      }}
-    >
+    <div className="neu-raised pointer-events-auto flex max-h-[70dvh] flex-col rounded-t-2xl">
       <button
         type="button"
-        className="flex h-8 shrink-0 items-center justify-center"
+        className="sub-touch flex h-9 shrink-0 items-center justify-center"
         onClick={() => onExpandedChange(!expanded)}
         aria-expanded={expanded}
         aria-label={expanded ? 'Show less' : 'Show more trip options'}
       >
-        <span className="block h-1 w-10 rounded-full bg-dim/50" />
+        <span className="neu-sunken-sm block h-1.5 w-10 rounded-full" />
       </button>
-      <div className="min-h-0 overflow-y-auto overscroll-contain px-4 pb-3">
+      <div className="min-h-0 overflow-y-auto overscroll-contain px-4 pb-[calc(0.75rem+var(--dock-h))]">
         {children}
       </div>
     </div>

@@ -28,7 +28,7 @@ export function LocationChip({
       : `You are here: ${here.shortName}`
 
   return (
-    <div className="pointer-events-auto glass max-w-[min(100%,16rem)] rounded-full px-3 py-2 text-sm text-paper md:max-w-[20rem]">
+    <div className="pointer-events-auto neu-raised max-w-[min(100%,16rem)] rounded-full px-3 py-2 text-sm text-ink md:max-w-[20rem]">
       <p className="truncate font-medium leading-tight" style={{ color }}>
         {line}
       </p>
