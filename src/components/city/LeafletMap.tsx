@@ -30,7 +30,7 @@ const CARTO_KEY = (
 function tileUrl(style: string) {
   const base =
     'https://basemaps.cartocdn.com/rastertiles/' + style + '/{z}/{x}/{y}.png'
-  return CARTO_KEY ? base + '?key=' + CARTO_KEY : base
+  return CARTO_KEY ? base + '?api_key=' + CARTO_KEY : base
 }
 
 const TILES = {
