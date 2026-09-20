@@ -51,9 +51,9 @@ export function JourneyDetails() {
   const live = liveArrival(journey)
 
   return (
-    <div className="flex h-[100dvh] w-full overflow-hidden bg-[var(--neu-surface)]">
+    <div className="flex h-[100dvh] w-full overflow-hidden">
       <main
-        className="custom-scrollbar relative h-full w-full overflow-y-auto scroll-smooth pb-[var(--dock-h)] lg:w-[45%] xl:w-[40%]"
+        className="custom-scrollbar relative h-full w-full overflow-y-auto scroll-smooth pb-[var(--dock-h)]"
         id="main"
       >
         <div
@@ -62,21 +62,24 @@ export function JourneyDetails() {
         >
           <button
             onClick={() => navigate('/')}
-            className="mb-8 flex items-center gap-2 text-sm font-bold text-muted transition-colors hoverable:text-ink"
+            className="mb-8 flex items-center gap-2 text-sm font-bold text-muted transition-colors hoverable:text-ink hoverable:drop-shadow-[var(--glow-accent)]"
           >
             <ChevronLeft size={16} /> Back to Planner
           </button>
 
-          <p className="text-xs font-bold tracking-[0.2em] text-accent-ink">
-            JOURNEY DETAILS
-          </p>
-          <h1 className="mt-3 text-balance font-display text-3xl font-extrabold leading-tight tracking-tight text-ink md:text-4xl">
-            Arriving at {live.arriveAt}
+          <div className="inline-block relative">
+            <div className="absolute inset-0 bg-[var(--color-accent)] blur-md opacity-20 rounded-full" />
+            <p className="relative text-[10px] font-bold tracking-[0.2em] text-accent-ink uppercase border border-[rgba(0,240,255,0.3)] bg-[rgba(0,240,255,0.05)] px-3 py-1 rounded-full">
+              Journey Details
+            </p>
+          </div>
+          <h1 className="mt-5 text-balance font-display text-4xl font-extrabold leading-tight tracking-tight text-ink md:text-5xl">
+            Arriving at <span className="text-accent-ink">{live.arriveAt}</span>
           </h1>
 
           {live.lateBy > 0 ? (
             <p
-              className="neu-sunken-sm neu-scope-warning mt-4 inline-flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-bold text-warning-ink"
+              className="glass-well neu-scope-warning mt-5 inline-flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-bold text-warning-ink border border-warning/30 shadow-[var(--glow-warning)]"
               aria-live="polite"
             >
               <TriangleAlert size={18} aria-hidden />
@@ -85,7 +88,7 @@ export function JourneyDetails() {
           ) : null}
 
           <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-base">
-            <span className="font-bold text-ink">
+            <span className="font-bold text-ink tracking-wide">
               {getPlace(journey.legs[0]?.fromId ?? 'fort').shortName} &rarr;{' '}
               {
                 getPlace(journey.legs[journey.legs.length - 1]?.toId ?? 'kdu')
@@ -117,8 +120,8 @@ export function JourneyDetails() {
             ) : null}
           </div>
 
-          <div className="neu-sunken mt-12 rounded-2xl p-6 md:p-8">
-            <h2 className="mb-6 text-xs font-bold uppercase tracking-[0.16em] text-muted">
+          <div className="glass-well mt-12 rounded-3xl p-6 md:p-8">
+            <h2 className="mb-6 text-[11px] font-bold uppercase tracking-[0.2em] text-muted">
               Timeline
             </h2>
             <JourneyTimeline journey={journey} />
@@ -128,8 +131,8 @@ export function JourneyDetails() {
             <WhyPanel journey={journey} />
 
             {alternatives.length ? (
-              <div className="neu-raised rounded-2xl p-6 md:p-8">
-                <h2 className="mb-6 text-sm font-bold uppercase tracking-wider text-ink">
+              <div className="glass-card rounded-3xl p-6 md:p-8">
+                <h2 className="mb-6 text-[11px] font-bold uppercase tracking-[0.2em] text-ink">
                   Alternative Routes
                 </h2>
                 <div className="grid gap-3">
@@ -158,7 +161,7 @@ export function JourneyDetails() {
             <WhatIfPanel journey={journey} />
           </div>
 
-          <div className="mt-12 lg:hidden">
+          <div className="mt-12 mb-12">
             <Button
               size="lg"
               className="h-14 w-full"
@@ -173,36 +176,7 @@ export function JourneyDetails() {
         </div>
       </main>
 
-      <aside className="relative hidden h-full w-[55%] p-8 lg:block xl:w-[60%]">
-        <div className="pointer-events-none absolute inset-x-14 top-14 z-20 flex items-start justify-between gap-4">
-          <div className="neu-raised pointer-events-auto flex items-center gap-3 rounded-full px-6 py-3">
-            <div className="size-2.5 rounded-full bg-accent motion-safe:animate-pulse" />
-            <span className="text-sm font-bold tracking-widest text-ink">
-              LIVE NETWORK MAP
-            </span>
-          </div>
 
-          <div className="pointer-events-auto">
-            <Button
-              variant="secondary"
-              onClick={() => {
-                selectJourney(journey.id)
-                navigate(`/live/${journey.id}`)
-              }}
-            >
-              Expand Live View
-            </Button>
-          </div>
-        </div>
-
-        <div className="neu-well-media relative h-full w-full cursor-move overflow-hidden rounded-3xl">
-          <QualityGate
-            variant="live"
-            journey={journey}
-            progress={liveProgress}
-          />
-        </div>
-      </aside>
     </div>
   )
 }

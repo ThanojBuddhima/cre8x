@@ -212,24 +212,35 @@ export function LeafletMap({
         {/* The traveller: a halo plus a solid dot, so it reads at any zoom. */}
         <CircleMarker
           center={you}
-          radius={14}
+          radius={20}
           pathOptions={{
             color: 'transparent',
             fillColor: accent,
-            fillOpacity: 0.25,
+            fillOpacity: 0.15,
+            className: 'animate-ping',
           }}
         />
         <CircleMarker
           center={you}
-          radius={7}
+          radius={12}
           pathOptions={{
-            color: hairline,
+            color: 'transparent',
+            fillColor: accent,
+            fillOpacity: 0.3,
+          }}
+        />
+        <CircleMarker
+          center={you}
+          radius={6}
+          pathOptions={{
+            color: '#fff',
             weight: 2,
             fillColor: accent,
             fillOpacity: 1,
+            className: 'drop-shadow-[0_0_10px_rgba(0,240,255,1)]',
           }}
         >
-          <Tooltip direction="top" offset={[0, -10]} permanent>
+          <Tooltip direction="top" offset={[0, -10]} permanent className="map-label">
             You are here
           </Tooltip>
         </CircleMarker>

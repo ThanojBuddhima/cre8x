@@ -28,8 +28,20 @@ export function LocationChip({
       : `You are here: ${here.shortName}`
 
   return (
-    <div className="pointer-events-auto neu-raised max-w-[min(100%,16rem)] rounded-full px-3 py-2 text-sm text-ink md:max-w-[20rem]">
-      <p className="truncate font-medium leading-tight" style={{ color }}>
+    <div className="pointer-events-auto glass-interactive max-w-[min(100%,16rem)] rounded-full px-4 py-3 text-sm text-ink md:max-w-[20rem] flex items-center gap-3">
+      {color && (
+        <span className="relative flex size-2.5 shrink-0 items-center justify-center">
+          <span
+            className="absolute inset-0 rounded-full animate-ping opacity-75"
+            style={{ background: color }}
+          />
+          <span
+            className="relative inline-flex size-1.5 rounded-full"
+            style={{ background: color }}
+          />
+        </span>
+      )}
+      <p className="truncate font-medium leading-tight" style={{ color: color ?? 'inherit' }}>
         {line}
       </p>
     </div>

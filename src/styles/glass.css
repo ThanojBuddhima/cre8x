@@ -1,0 +1,299 @@
+/* ---------------------------------------------------------------------
+   The Glassmorphism depth layer.
+   Replaces the neumorphic system with a futuristic translucent UI.
+   --------------------------------------------------------------------- */
+
+@utility neu-flat {
+  background: transparent;
+  box-shadow: none;
+}
+
+/* --- Cards / Raised -------------------------------------------------- */
+
+@utility neu-raised-sm {
+  background: var(--glass-surface);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-core);
+}
+
+@utility neu-raised {
+  background: var(--glass-surface);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-core);
+}
+
+@utility neu-raised-lg {
+  background: var(--glass-surface);
+  backdrop-filter: var(--glass-blur-lg);
+  -webkit-backdrop-filter: var(--glass-blur-lg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-core);
+}
+
+/* --- Wells / Sunken -------------------------------------------------- */
+
+@utility neu-sunken-sm {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+@utility neu-sunken {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0 4px 15px rgba(0, 0, 0, 0.6);
+}
+
+@utility neu-sunken-deep {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.02);
+  box-shadow: inset 0 6px 20px rgba(0, 0, 0, 0.8);
+}
+
+/* --- Interactive ------------------------------------------------------ */
+
+@utility neu-pressable {
+  background: var(--glass-surface);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-core);
+  transition:
+    box-shadow var(--dur-ui) var(--ease-out),
+    transform var(--dur-ui) var(--ease-spring),
+    border-color var(--dur-ui) var(--ease-out),
+    background var(--dur-ui) var(--ease-out);
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled):not([aria-disabled='true']) {
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: var(--shadow-core), 0 0 15px rgba(255, 255, 255, 0.05);
+      transform: translateY(-2px) scale(1.01);
+    }
+  }
+
+  &:active:not(:disabled):not([aria-disabled='true']) {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(1px) scale(0.98);
+  }
+
+  &:disabled,
+  &[aria-disabled='true'] {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+@utility neu-pressable-lg {
+  background: var(--glass-surface);
+  backdrop-filter: var(--glass-blur-lg);
+  -webkit-backdrop-filter: var(--glass-blur-lg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-core);
+  transition: all var(--dur-ui) var(--ease-out);
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled):not([aria-disabled='true']) {
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px) scale(1.01);
+    }
+  }
+
+  &:active:not(:disabled):not([aria-disabled='true']) {
+    transform: translateY(1px) scale(0.98);
+  }
+}
+
+@utility neu-pressable-sm {
+  background: var(--glass-surface);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  transition: all var(--dur-ui) var(--ease-out);
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled):not([aria-disabled='true']) {
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+  }
+
+  &:active:not(:disabled):not([aria-disabled='true']) {
+    transform: translateY(1px) scale(0.98);
+  }
+}
+
+@utility neu-pressed {
+  background: var(--color-accent-dim);
+  border: 1px solid var(--color-accent);
+  box-shadow: var(--glow-accent);
+  transform: none;
+}
+
+@utility neu-pressed-sm {
+  background: var(--color-accent-dim);
+  border: 1px solid var(--color-accent);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+  transform: none;
+}
+
+/* --- Tinted scopes -------------------------------------------------- */
+
+@utility neu-scope-accent {
+  background: rgba(0, 240, 255, 0.1);
+  border-color: rgba(0, 240, 255, 0.3);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled):not([aria-disabled='true']) {
+      border-color: rgba(0, 240, 255, 0.8);
+      box-shadow: var(--glow-accent);
+    }
+  }
+}
+
+@utility neu-scope-warning {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.3);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled):not([aria-disabled='true']) {
+      border-color: rgba(245, 158, 11, 0.8);
+      box-shadow: var(--glow-warning);
+    }
+  }
+}
+
+@utility neu-scope-danger {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled):not([aria-disabled='true']) {
+      border-color: rgba(239, 68, 68, 0.8);
+      box-shadow: var(--glow-danger);
+    }
+  }
+}
+
+/* --- Media viewports ----------------------------------------------------- */
+
+@utility neu-well-media {
+  position: relative;
+  background: var(--bg-color);
+  border: 1px solid var(--color-accent-dim);
+  
+  /* Scanline effect */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      transparent 50%,
+      rgba(0, 240, 255, 0.05) 51%,
+      transparent 51%
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0.5;
+  }
+}
+
+@utility tap {
+  min-height: var(--touch);
+  display: inline-flex;
+  align-items: center;
+}
+
+@utility neu-row {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid transparent;
+  transition: all var(--dur-ui) var(--ease-out);
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  &:active:not(:disabled) {
+    background: rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* --- NEW GLASS UTILITIES --- */
+
+@utility glass-card {
+  background: var(--glass-surface);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-core);
+}
+
+@utility glass-well {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.8);
+}
+
+@utility glass-interactive {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-core);
+  transition:
+    box-shadow var(--dur-ui) var(--ease-out),
+    transform var(--dur-ui) var(--ease-spring),
+    border-color var(--dur-ui) var(--ease-out),
+    background var(--dur-ui) var(--ease-out);
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled):not([aria-disabled='true']) {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: var(--shadow-core), 0 0 15px rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+  }
+
+  &:active:not(:disabled):not([aria-disabled='true']) {
+    background: rgba(255, 255, 255, 0.02);
+    transform: translateY(1px);
+  }
+
+  &:disabled,
+  &[aria-disabled='true'] {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+@utility glass-viewport {
+  position: relative;
+  background: var(--bg-color);
+  
+  /* Scanline effect */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      transparent 50%,
+      rgba(0, 240, 255, 0.05) 51%,
+      transparent 51%
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0.5;
+  }
+}

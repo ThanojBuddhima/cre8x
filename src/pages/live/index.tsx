@@ -13,41 +13,6 @@ import { useLiveJourney } from '@/hooks/useLiveJourney'
 import { useMediaQuery } from '@/lib/useMediaQuery'
 import { useSynqStore } from '@/store/useSynqStore'
 
-/** Shared switch. Sunken when on, which is the same "pressed" idiom as Chip. */
-function CalmModeSwitch({
-  calmMode,
-  onToggle,
-  className,
-}: {
-  calmMode: boolean
-  onToggle: () => void
-  className?: string
-}) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={calmMode}
-      onClick={onToggle}
-      className={`neu-pressable flex w-full items-center justify-between gap-3 rounded-lg px-5 py-4 text-left text-sm font-bold text-ink ${className ?? ''}`}
-    >
-      <span>Calm mode (no 3D)</span>
-      <span
-        className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-shadow duration-[var(--dur-ui)] ease-[var(--ease-out)] ${
-          calmMode ? 'shadow-[var(--neu-in-2)]' : 'shadow-[var(--neu-in-1)]'
-        }`}
-      >
-        <span
-          className={`inline-block size-4 rounded-full transition-transform duration-[var(--dur-ui)] ease-[var(--ease-out)] ${
-            calmMode
-              ? 'translate-x-6 bg-accent'
-              : 'translate-x-1 bg-muted opacity-60'
-          }`}
-        />
-      </span>
-    </button>
-  )
-}
 
 /** Three headline numbers, read from the scenario rather than hardcoded. */
 function CityPulse({ compact = false }: { compact?: boolean }) {
@@ -63,22 +28,22 @@ function CityPulse({ compact = false }: { compact?: boolean }) {
 
   return (
     <dl
-      className={`neu-raised flex items-center rounded-xl text-center ${
-        compact ? 'gap-3 px-3 py-2' : 'gap-5 p-4'
+      className={`glass-card flex items-center rounded-2xl text-center ${
+        compact ? 'gap-3 px-4 py-3' : 'gap-5 px-6 py-4'
       }`}
     >
       {cells.map((cell, i) => (
-        <div key={cell.label} className="flex items-center gap-3">
+        <div key={cell.label} className="flex items-center gap-4">
           {i > 0 ? (
-            <span className="h-8 w-px bg-muted opacity-20" aria-hidden />
+            <span className="h-8 w-[2px] bg-white opacity-10 rounded-full" aria-hidden />
           ) : null}
           <div>
-            <dt className="text-[10px] font-bold uppercase tracking-wider text-muted">
+            <dt className="text-[9px] font-bold uppercase tracking-[0.2em] text-muted">
               {cell.label}
             </dt>
             <dd
-              className={`mt-1 truncate text-sm font-extrabold ${
-                cell.warn ? 'text-warning-ink' : 'text-ink'
+              className={`mt-1 truncate text-[15px] font-bold tracking-wide ${
+                cell.warn ? 'text-warning-ink drop-shadow-[var(--glow-warning)]' : 'text-ink'
               }`}
             >
               {cell.value}
@@ -117,7 +82,7 @@ export function LiveTracking() {
   const backButton = (
     <button
       onClick={() => navigate(`/journey/${id}`)}
-      className="neu-pressable flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-bold text-ink hoverable:text-accent-ink"
+      className="glass-interactive flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-ink hoverable:text-accent-ink"
     >
       <ChevronLeft size={16} /> <span className="truncate">Journey</span>
     </button>
@@ -132,7 +97,7 @@ export function LiveTracking() {
      --------------------------------------------------------------------- */
   if (!desktop) {
     return (
-      <div className="relative h-[100dvh] w-full overflow-hidden bg-[var(--neu-surface)]">
+      <div className="relative h-[100dvh] w-full overflow-hidden bg-[var(--bg-color)]">
         <div className="absolute inset-0 z-0">
           <LiveMapGate journey={journey} progress={progress} />
         </div>
@@ -141,14 +106,14 @@ export function LiveTracking() {
           {status}
 
           <div
-            className="pointer-events-none flex flex-col gap-3 p-4"
-            style={{ paddingTop: 'calc(var(--header-h) + 0.5rem)' }}
+            className="pointer-events-none flex flex-col gap-3 p-4 bg-gradient-to-b from-[var(--bg-color)] to-transparent"
+            style={{ paddingTop: 'calc(var(--header-h) + 0.5rem)', paddingBottom: '2rem' }}
           >
             <div className="pointer-events-auto flex items-start gap-2">
               {backButton}
               <LocationChip journey={journey} progress={progress} />
             </div>
-            <div className="pointer-events-auto self-start">
+            <div className="pointer-events-auto self-start mt-2">
               <CityPulse compact />
             </div>
           </div>
@@ -167,10 +132,7 @@ export function LiveTracking() {
                 {sheetOpen ? (
                   <>
                     <LayerToggles />
-                    <CalmModeSwitch
-                      calmMode={calmMode}
-                      onToggle={() => setCalmMode(!calmMode)}
-                    />
+
                   </>
                 ) : null}
               </div>
@@ -186,8 +148,8 @@ export function LiveTracking() {
      exactly once. The wrapper divs that used to box each control are gone -
      they were raised boxes holding already-raised children. */
   return (
-    <div className="relative h-[100dvh] w-full overflow-hidden bg-[var(--neu-surface)]">
-      <div className="neu-well-media absolute inset-8 z-0 overflow-hidden rounded-3xl">
+    <div className="relative h-[100dvh] w-full overflow-hidden bg-[var(--bg-color)]">
+      <div className="glass-viewport absolute inset-8 z-0 overflow-hidden rounded-[40px] shadow-[0_0_50px_rgba(0,0,0,0.8)] border border-[rgba(0,240,255,0.2)]">
         <LiveMapGate journey={journey} progress={progress} />
       </div>
 
@@ -204,9 +166,12 @@ export function LiveTracking() {
           </div>
 
           <div className="pointer-events-auto flex flex-col items-end gap-4">
-            <div className="neu-raised flex items-center gap-3 rounded-lg px-6 py-3">
-              <div className="size-2.5 rounded-full bg-accent motion-safe:animate-pulse" />
-              <span className="text-sm font-bold uppercase tracking-widest text-ink">
+            <div className="glass-card flex items-center gap-4 rounded-full px-6 py-3 border border-[rgba(0,240,255,0.3)] shadow-[var(--glow-accent)]">
+              <div className="relative flex size-3 items-center justify-center">
+                <div className="absolute inset-0 bg-accent rounded-full animate-ping opacity-75" />
+                <div className="relative size-2 rounded-full bg-accent" />
+              </div>
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-ink">
                 City Pulse
               </span>
             </div>
@@ -216,15 +181,12 @@ export function LiveTracking() {
 
         <div className="pointer-events-auto absolute left-8 top-[calc(var(--header-h)+13rem)] flex w-64 flex-col gap-5">
           <LayerToggles />
-          <CalmModeSwitch
-            calmMode={calmMode}
-            onToggle={() => setCalmMode(!calmMode)}
-          />
+
           <Inspector />
         </div>
 
         <div className="absolute inset-x-8 bottom-6 flex items-end justify-between gap-6">
-          <div className="neu-raised pointer-events-auto max-w-[50%] rounded-lg px-5 py-4">
+          <div className="glass-card pointer-events-auto max-w-[50%] rounded-2xl px-5 py-4">
             <MapLegend />
           </div>
           <MapControls live className="relative" />

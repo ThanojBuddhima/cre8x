@@ -30,28 +30,41 @@ export function CityStatusChip() {
         CITY PULSE
       </h2>
 
-      <div className="neu-raised mt-3 rounded-xl">
+      <div className="glass-card mt-4 rounded-3xl">
         <button
           type="button"
           onClick={() => setOpen((value) => !value)}
           aria-expanded={open}
-          className="flex w-full items-center gap-3 px-4 py-3 text-left"
+          className="flex w-full items-center gap-4 px-5 py-4 text-left"
         >
           <span
-            className="size-2.5 shrink-0 rounded-full"
-            style={{
-              background:
-                scenario === 'normal'
-                  ? 'var(--color-accent)'
-                  : 'var(--color-warning)',
-            }}
+            className="relative flex size-3 shrink-0 items-center justify-center"
             aria-hidden
-          />
+          >
+            <span
+              className="absolute inset-0 rounded-full animate-ping opacity-75"
+              style={{
+                background:
+                  scenario === 'normal'
+                    ? 'var(--color-accent)'
+                    : 'var(--color-warning)',
+              }}
+            />
+            <span
+              className="relative inline-flex size-2 rounded-full"
+              style={{
+                background:
+                  scenario === 'normal'
+                    ? 'var(--color-accent)'
+                    : 'var(--color-warning)',
+              }}
+            />
+          </span>
           <span className="min-w-0 flex-1">
-            <span className="block truncate text-base font-medium text-ink">
+            <span className="block truncate text-[15px] font-bold text-ink tracking-wide">
               {status.weatherLabel}
             </span>
-            <span className="block truncate text-sm text-muted">
+            <span className="block truncate text-xs font-medium text-muted mt-0.5 tracking-[0.1em] uppercase">
               Network {status.networkHealth.toLowerCase()}
             </span>
           </span>

@@ -10,7 +10,7 @@ export function SurfaceCard({
   return (
     <div
       className={cn(
-        'neu-raised rounded-2xl p-8 transition-shadow duration-[var(--dur-ui)] ease-[var(--ease-out)]',
+        'neu-raised rounded-3xl p-8 transition-all duration-[var(--dur-ui)] ease-[var(--ease-out)]',
         className,
       )}
       {...props}

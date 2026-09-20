@@ -116,7 +116,7 @@ export function IntentCard({ onPlanned, compact = false }: IntentCardProps) {
     <div className="pointer-events-auto w-full">
       <h1
         className={cn(
-          'font-display font-extrabold tracking-tight text-ink',
+          'font-display font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-[var(--color-accent)] drop-shadow-[0_0_20px_rgba(0,240,255,0.2)]',
           compact ? 'text-3xl md:text-4xl' : 'text-4xl md:text-5xl',
         )}
       >
@@ -136,14 +136,14 @@ export function IntentCard({ onPlanned, compact = false }: IntentCardProps) {
         onOther={() => setPicking('destination')}
       />
 
-      <div className="neu-sunken mt-8 flex items-stretch gap-1 rounded-xl p-3">
+      <div className="glass-well mt-8 flex items-stretch gap-1 rounded-2xl p-3 border border-[rgba(255,255,255,0.05)]">
         <div className="min-w-0 flex-1">
           <TripRow
             label="From"
             value={origin.name}
             onClick={() => setPicking('origin')}
           />
-          <div className="mx-4 h-px bg-muted opacity-20" />
+          <div className="mx-4 h-px bg-[rgba(255,255,255,0.1)]" />
           <TripRow
             label="To"
             value={destination ? destination.name : 'Choose a place'}
@@ -155,7 +155,7 @@ export function IntentCard({ onPlanned, compact = false }: IntentCardProps) {
           type="button"
           onClick={swap}
           aria-label="Swap start and destination"
-          className="neu-pressable-sm my-auto grid size-12 shrink-0 place-items-center rounded-lg text-muted hoverable:text-accent-ink"
+          className="glass-interactive my-auto grid size-12 shrink-0 place-items-center rounded-xl text-muted hoverable:text-accent-ink transition-transform hoverable:rotate-180 duration-500"
         >
           <ArrowUpDown size={18} aria-hidden />
         </button>

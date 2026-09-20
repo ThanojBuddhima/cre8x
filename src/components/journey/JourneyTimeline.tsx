@@ -19,26 +19,26 @@ export function JourneyTimeline({ journey }: { journey: Journey }) {
         const transfer = transferBetween(leg, next)
 
         return (
-          <li key={leg.id} className="grid grid-cols-[16px_1fr] gap-3">
+          <li key={leg.id} className="grid grid-cols-[16px_1fr] gap-4">
             <div className="flex flex-col items-center">
               <span
-                className="mt-1 size-3 shrink-0 rounded-full"
-                style={{ background: color }}
+                className="mt-1.5 size-4 shrink-0 rounded-full shadow-[0_0_12px_currentColor]"
+                style={{ background: color, color }}
               />
               {index < journey.legs.length - 1 ? (
                 <span
-                  className="w-px flex-1"
+                  className="w-[2px] flex-1 my-1"
                   style={{
                     background: next
-                      ? `linear-gradient(${color}, ${modeColor(next.mode, theme)})`
+                      ? `linear-gradient(to bottom, ${color}, ${modeColor(next.mode, theme)})`
                       : color,
                   }}
                 />
               ) : null}
             </div>
 
-            <div className="pb-6">
-              <p className="text-xs text-muted">
+            <div className="pb-8">
+              <p className="text-xs font-medium tracking-wide text-muted">
                 {leg.departure}–{leg.arrival} · {leg.durationMin} min
               </p>
               <p className="mt-1 text-sm font-medium" style={{ color }}>

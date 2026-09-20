@@ -22,14 +22,14 @@ export function AlertBanner({
 
   return (
     <div
-      className="pointer-events-auto neu-raised w-full rounded-2xl p-5"
+      className="pointer-events-auto glass-card w-full rounded-3xl p-6 border border-warning/30 shadow-[var(--glow-warning)] bg-[rgba(245,158,11,0.05)]"
       role="status"
       aria-live="assertive"
     >
       <AiBadge label="Rebooked for you" />
-      <p className="mt-2 text-sm font-medium text-warning-ink">{title}</p>
-      <p className="mt-1 text-sm text-ink">{body}</p>
-      <div className="mt-3 flex flex-wrap gap-2">
+      <p className="mt-4 text-base font-bold text-warning-ink tracking-wide">{title}</p>
+      <p className="mt-1 text-sm text-ink/80">{body}</p>
+      <div className="mt-5 flex flex-wrap gap-3">
         <Button size="sm" onClick={onAccept}>
           Continue this way
         </Button>

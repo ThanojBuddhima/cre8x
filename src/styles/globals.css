@@ -1,12 +1,12 @@
 @property --glow {
   syntax: '<color>';
   inherits: true;
-  initial-value: #6C63FF;
+  initial-value: #00F0FF;
 }
 
 html {
-  color-scheme: light;
-  background: var(--neu-surface);
+  color-scheme: dark;
+  background: var(--bg-color);
   transition: --glow var(--dur-glow, 300ms) var(--ease-out);
 }
 
@@ -23,7 +23,7 @@ body {
   margin: 0;
   min-height: 100dvh;
   overflow-x: hidden;
-  background: var(--neu-surface);
+  background: radial-gradient(circle at 50% 0%, #1a1a2e 0%, var(--bg-color) 100%);
   color: var(--color-ink);
   font-family: var(--font-sans);
   letter-spacing: -0.011em;
@@ -36,20 +36,17 @@ body {
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--color-accent) 22%, transparent);
-  color: var(--color-ink);
+  background: color-mix(in srgb, var(--color-accent) 30%, transparent);
+  color: #fff;
 }
 
-/* Offset has to clear the shadow field or the ring disappears into it.
-   This is the only non-shadow affordance in the system, so it stays loud. */
 :focus-visible {
-  outline: 2px solid var(--color-accent-ink);
-  outline-offset: 3px;
-  border-radius: 2px;
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+  border-radius: 4px;
+  box-shadow: var(--glow-accent);
 }
 
-/* Scoped to real controls. The old blanket rule included <a>, which inflated
-   every inline link's line box and silently overrode the button size scale. */
 button,
 [role='button'],
 [role='switch'],
@@ -65,8 +62,6 @@ button,
   min-width: var(--touch);
 }
 
-/* Opt out where the control is deliberately small and sits inside a larger
-   hit area, or where it is laid out as a wide row rather than a tap target. */
 button.sub-touch,
 [role='button'].sub-touch,
 [role='switch'].sub-touch {
@@ -80,8 +75,10 @@ button.sub-touch,
   top: -64px;
   z-index: 80;
   border-radius: var(--radius-md);
-  background: var(--neu-surface);
-  box-shadow: var(--neu-2);
+  background: var(--glass-surface);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--color-accent);
+  box-shadow: var(--glow-accent);
   color: var(--color-ink);
   padding: 10px 16px;
   font-weight: 600;
@@ -93,11 +90,11 @@ button.sub-touch,
 
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, var(--color-muted) 40%, transparent) transparent;
+  scrollbar-color: var(--color-accent-dim) transparent;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  width: 10px;
+  width: 6px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
@@ -105,32 +102,32 @@ button.sub-touch,
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--color-muted) 35%, transparent);
-  border: 3px solid transparent;
-  background-clip: content-box;
+  background: var(--color-accent-dim);
   border-radius: 999px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in srgb, var(--color-muted) 55%, transparent);
-  background-clip: content-box;
+  background: var(--color-accent);
+  box-shadow: var(--glow-accent);
 }
 
 .map-label {
   pointer-events: none;
   white-space: nowrap;
-  border-radius: 999px;
-  background: var(--neu-surface);
-  color: var(--color-ink);
-  border: none;
-  padding: 4px 10px;
-  font-size: 11px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: var(--glass-blur-sm);
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent-dim);
+  padding: 4px 8px;
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   font-weight: 700;
-  box-shadow: var(--neu-1);
+  box-shadow: 0 2px 10px rgba(0, 240, 255, 0.1);
 }
 
-/* The class gate was dropped: it is added by a React effect, so the rule was
-   inert on first paint - exactly when the animations it guards are running. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -153,29 +150,30 @@ html.reduce-motion *::after {
 
 .leaflet-container {
   font-family: var(--font-sans);
-  background: var(--map-sky);
+  background: var(--map-sky) !important;
 }
 
 .leaflet-container .leaflet-control-attribution {
   margin-bottom: calc(var(--dock-h) - 1.5rem);
-  border-radius: 999px;
-  background: var(--neu-surface);
-  box-shadow: var(--neu-1);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: var(--glass-blur-sm);
+  border: 1px solid var(--glass-border);
   color: var(--color-muted);
-  font-size: 11px;
-  padding: 2px 8px;
-  border: none;
+  font-size: 10px;
+  padding: 4px 8px;
 }
 
 .leaflet-container .leaflet-control-attribution a {
-  color: var(--color-accent-ink);
+  color: var(--color-accent);
 }
 
 .leaflet-container .leaflet-tooltip {
-  border: none;
-  background: var(--neu-surface);
-  color: var(--color-ink);
+  border: 1px solid var(--color-accent-dim);
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: var(--glass-blur-sm);
+  color: #fff;
   font-size: 11px;
   font-weight: 700;
-  box-shadow: var(--neu-1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }

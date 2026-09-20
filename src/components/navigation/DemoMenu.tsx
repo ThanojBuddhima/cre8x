@@ -20,11 +20,11 @@ export function DemoMenu() {
     <>
       <button
         type="button"
-        className="neu-pressable-sm pointer-events-auto flex h-11 items-center gap-2 rounded-full px-4 text-sm font-bold text-muted hoverable:text-ink"
+        className="neu-pressable-sm pointer-events-auto flex h-11 items-center gap-2 rounded-full px-4 text-sm font-bold text-ink hoverable:text-accent-ink border border-[rgba(255,255,255,0.1)]"
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
       >
-        <Sparkles size={16} />
+        <Sparkles size={16} className="text-accent-ink" />
         Demo
       </button>
       <Sheet open={open} onOpenChange={setOpen} title="Demo controls">
