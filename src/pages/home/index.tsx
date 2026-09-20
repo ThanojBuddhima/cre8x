@@ -82,66 +82,83 @@ export function LandingHome() {
           className="relative flex min-h-[100dvh] flex-col justify-center px-6 pb-32 md:px-12 xl:px-20"
           style={{ paddingTop: 'calc(var(--header-h) + 2.5rem)' }}
         >
-          <div className="mx-auto w-full max-w-3xl">
-            <h1 className="mb-6 text-balance font-display text-5xl font-extrabold leading-[1.05] tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-[var(--color-accent)] to-[var(--color-secondary)] sm:text-6xl md:text-7xl lg:text-8xl">
-              Your next journey, reimagined.
-            </h1>
-            <p className="mb-10 max-w-md text-lg font-medium text-muted">
-              One intelligent network connecting every destination across
-              ground, rail, air, and beyond.
-            </p>
+          <div className="mx-auto w-full max-w-6xl">
+            <div className="lg:grid lg:grid-cols-12 lg:gap-16 lg:items-center">
+              <div className="lg:col-span-7 xl:col-span-6">
+                <h1 className="mb-6 text-balance font-display text-5xl font-extrabold leading-[1.05] tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-[var(--color-accent)] to-[var(--color-secondary)] sm:text-6xl md:text-7xl lg:text-8xl">
+                  Your next journey, reimagined.
+                </h1>
+                <p className="mb-10 max-w-md text-lg font-medium text-muted">
+                  One intelligent network connecting every destination across
+                  ground, rail, air, and beyond.
+                </p>
 
-            {/* Deliberately flat. This is the primary content region, already
-                the canvas colour - giving it a shadow spent a depth level and
-                pushed everything nested inside it past the two-plane budget. */}
-            <div className="relative z-10">
-              {planned ? (
-                <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
-                  <div className="mb-8 flex items-center justify-between gap-4">
-                    <div className="min-w-0">
-                      <p className="text-xs font-bold uppercase tracking-widest text-muted">
-                        Your route options
-                      </p>
-                      <h2 className="mt-2 truncate font-display text-2xl font-bold tracking-tight text-ink">
-                        {getPlace(intent.originId).shortName} to{' '}
-                        {getPlace(intent.destinationId).shortName}
-                      </h2>
-                    </div>
-                    <button
-                      type="button"
-                      className="glass-interactive h-11 shrink-0 rounded-lg px-4 text-sm font-bold text-accent-ink"
-                      onClick={() => setPlanned(false)}
-                    >
-                      Edit
-                    </button>
-                  </div>
-                  <div className="glass-well rounded-3xl p-4">
-                    <JourneyList />
+                <div className="mt-16 hidden lg:flex items-center justify-start gap-4 text-muted">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.2em]">
+                    Explore Network
+                  </span>
+                  <div className="relative flex size-10 items-center justify-center">
+                    <div className="absolute inset-0 rounded-full border border-accent opacity-20 animate-ping duration-1000" />
+                    <div className="absolute inset-1 rounded-full border border-accent opacity-40 animate-ping duration-[1500ms]" />
+                    <ChevronDown size={14} className="text-accent-ink relative z-10" />
                   </div>
                 </div>
-              ) : (
-                <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
-                  <IntentCard compact onPlanned={() => setPlanned(true)} />
-                </div>
-              )}
-            </div>
-
-            <div className="mt-16 flex items-center justify-center gap-4 text-muted lg:justify-start">
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em]">
-                Explore Network
-              </span>
-              <div className="relative flex size-10 items-center justify-center">
-                <div className="absolute inset-0 rounded-full border border-accent opacity-20 animate-ping duration-1000" />
-                <div className="absolute inset-1 rounded-full border border-accent opacity-40 animate-ping duration-[1500ms]" />
-                <ChevronDown size={14} className="text-accent-ink relative z-10" />
               </div>
-            </div>
 
-            {/* Was absolutely positioned at the same offset as the page logo
-                and collided with it on narrow screens. It is a panel, not a
-                chip, so it belongs in the flow. */}
-            <div className="mt-16 lg:max-w-sm">
-              <CityStatusChip />
+              <div className="lg:col-span-5 xl:col-span-5 xl:col-start-8 flex flex-col gap-10 mt-12 lg:mt-0 relative z-10">
+                {/* Deliberately flat. This is the primary content region, already
+                    the canvas colour - giving it a shadow spent a depth level and
+                    pushed everything nested inside it past the two-plane budget. */}
+                <div>
+                  {planned ? (
+                    <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
+                      <div className="mb-8 flex items-center justify-between gap-4">
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold uppercase tracking-widest text-muted">
+                            Your route options
+                          </p>
+                          <h2 className="mt-2 truncate font-display text-2xl font-bold tracking-tight text-ink">
+                            {getPlace(intent.originId).shortName} to{' '}
+                            {getPlace(intent.destinationId).shortName}
+                          </h2>
+                        </div>
+                        <button
+                          type="button"
+                          className="glass-interactive h-11 shrink-0 rounded-lg px-4 text-sm font-bold text-accent-ink"
+                          onClick={() => setPlanned(false)}
+                        >
+                          Edit
+                        </button>
+                      </div>
+                      <div className="glass-well rounded-3xl p-4">
+                        <JourneyList />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
+                      <IntentCard compact onPlanned={() => setPlanned(true)} />
+                    </div>
+                  )}
+                </div>
+
+                {/* Was absolutely positioned at the same offset as the page logo
+                    and collided with it on narrow screens. It is a panel, not a
+                    chip, so it belongs in the flow. */}
+                <div className="w-full">
+                  <CityStatusChip />
+                </div>
+              </div>
+
+              <div className="mt-16 flex lg:hidden items-center justify-center gap-4 text-muted">
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em]">
+                  Explore Network
+                </span>
+                <div className="relative flex size-10 items-center justify-center">
+                  <div className="absolute inset-0 rounded-full border border-accent opacity-20 animate-ping duration-1000" />
+                  <div className="absolute inset-1 rounded-full border border-accent opacity-40 animate-ping duration-[1500ms]" />
+                  <ChevronDown size={14} className="text-accent-ink relative z-10" />
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -151,35 +168,36 @@ export function LandingHome() {
             key={section.title}
             className="relative flex min-h-[70dvh] flex-col justify-center px-6 py-24 md:px-12 md:py-32 xl:px-20"
           >
-            <div className="mx-auto w-full max-w-3xl">
-              <div className="mb-8 flex items-center gap-4">
-                <div className="glass-well grid size-10 place-items-center rounded-full text-sm font-bold text-accent-ink shadow-[var(--glow-accent)] border border-[rgba(0,240,255,0.3)] relative">
-                  <div className="absolute inset-0 bg-accent rounded-full opacity-20 blur-sm" />
-                  <span className="relative z-10">0{idx + 1}</span>
+            <div className="mx-auto w-full max-w-6xl">
+              <div className={`lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center ${idx % 2 !== 0 ? 'lg:rtl' : ''}`}>
+                <div className={idx % 2 !== 0 ? 'lg:ltr' : ''}>
+                  <div className="mb-8 flex items-center gap-4">
+                    <div className="glass-well grid size-10 place-items-center rounded-full text-sm font-bold text-accent-ink shadow-[var(--glow-accent)] border border-[rgba(0,240,255,0.3)] relative">
+                      <div className="absolute inset-0 bg-accent rounded-full opacity-20 blur-sm" />
+                      <span className="relative z-10">0{idx + 1}</span>
+                    </div>
+                    <div className="h-px w-16 bg-gradient-to-r from-accent to-transparent opacity-50" />
+                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent">
+                      {section.title}
+                    </span>
+                  </div>
+                  <h2 className="mb-6 text-balance font-display text-4xl font-extrabold tracking-tight text-ink sm:text-5xl md:text-6xl">
+                    {section.title}
+                  </h2>
+                  <p className="mb-10 text-lg font-medium leading-relaxed text-muted">
+                    {section.desc}
+                  </p>
                 </div>
-                <div className="h-px w-16 bg-gradient-to-r from-accent to-transparent opacity-50" />
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent">
-                  {section.title}
-                </span>
-              </div>
-              <h2 className="mb-6 text-balance font-display text-4xl font-extrabold tracking-tight text-ink sm:text-5xl md:text-6xl">
-                {section.title}
-              </h2>
-              <p className="mb-10 text-lg font-medium leading-relaxed text-muted">
-                {section.desc}
-              </p>
 
-              {/* neu-well-media, not a plain inset: an inset shadow paints
-                  behind its own content, so a well holding an opaque image
-                  showed nothing but the 8px of padding around it. */}
-              <div className="glass-viewport w-full overflow-hidden rounded-3xl p-2 lg:hidden shadow-[0_0_30px_rgba(0,0,0,0.5)]">
-                <img
-                  src={section.image}
-                  alt={section.title}
-                  loading="lazy"
-                  className="aspect-video w-full rounded-2xl object-cover relative z-10"
-                  onError={(e) => (e.currentTarget.style.display = 'none')}
-                />
+                <div className={`glass-viewport w-full overflow-hidden rounded-3xl p-2 shadow-[0_0_30px_rgba(0,0,0,0.5)] ${idx % 2 !== 0 ? 'lg:ltr' : ''}`}>
+                  <img
+                    src={section.image}
+                    alt={section.title}
+                    loading="lazy"
+                    className="aspect-[4/3] lg:aspect-video w-full rounded-2xl object-cover relative z-10"
+                    onError={(e) => (e.currentTarget.style.display = 'none')}
+                  />
+                </div>
               </div>
             </div>
           </section>

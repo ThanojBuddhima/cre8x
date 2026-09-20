@@ -56,7 +56,7 @@ export function JourneyDetails() {
         id="main"
       >
         <div
-          className="mx-auto max-w-2xl px-6 pb-12 md:px-10"
+          className="mx-auto max-w-6xl px-6 pb-24 md:px-10"
           style={{ paddingTop: 'calc(var(--header-h) + 1.5rem)' }}
         >
           <button
@@ -100,77 +100,94 @@ export function JourneyDetails() {
             </span>
           </div>
 
-          <div className="mt-10 grid gap-6">
-            {arrived ? (
-              <ArrivalCard />
-            ) : (
-              <LiveHud journey={journey} progress={liveProgress} />
-            )}
-            <EmergencyPanel />
-            {disruptionShown && !arrived ? (
-              <AlertBanner
-                onAccept={() => {
-                  setAcceptedReroute(true)
-                  selectJourney('j2')
-                  setDisruptionShown(false)
-                }}
-                onOther={() => navigate(`/journey/${planned.id}`)}
-              />
-            ) : null}
-          </div>
+          <div className="mt-10 lg:mt-16 lg:grid lg:grid-cols-12 lg:gap-12 lg:items-start">
+            {/* Left Column */}
+            <div className="lg:col-span-5 xl:col-span-4 flex flex-col gap-6">
+              {arrived ? (
+                <ArrivalCard />
+              ) : (
+                <LiveHud journey={journey} progress={liveProgress} />
+              )}
+              <EmergencyPanel />
+              {disruptionShown && !arrived ? (
+                <AlertBanner
+                  onAccept={() => {
+                    setAcceptedReroute(true)
+                    selectJourney('j2')
+                    setDisruptionShown(false)
+                  }}
+                  onOther={() => navigate(`/journey/${planned.id}`)}
+                />
+              ) : null}
 
-          <div className="glass-well mt-12 rounded-3xl p-6 md:p-8">
-            <h2 className="mb-6 text-[11px] font-bold uppercase tracking-[0.2em] text-muted">
-              Timeline
-            </h2>
-            <JourneyTimeline journey={journey} />
-          </div>
-
-          <div className="mt-12 grid gap-12">
-            <WhyPanel journey={journey} />
-
-            {alternatives.length ? (
-              <div className="glass-card rounded-3xl p-6 md:p-8">
-                <h2 className="mb-6 text-[11px] font-bold uppercase tracking-[0.2em] text-ink">
-                  Alternative Routes
-                </h2>
-                <div className="grid gap-3">
-                  {alternatives.map((item) => (
-                    <Link
-                      key={item.id}
-                      to={`/journey/${item.id}`}
-                      onClick={() => selectJourney(item.id)}
-                      className="neu-row flex flex-wrap items-center justify-between gap-x-4 gap-y-1 rounded-lg px-5 py-4 text-sm"
-                    >
-                      <span className="font-bold text-ink">
-                        {item.tag}
-                        <span className="ml-2 font-medium text-muted">
-                          Arrives {item.arriveAt}
-                        </span>
-                      </span>
-                      <span className="font-extrabold text-accent-ink">
-                        {item.durationMin} min
-                      </span>
-                    </Link>
-                  ))}
-                </div>
+              <div className="hidden lg:block mt-6">
+                <Button
+                  size="lg"
+                  className="h-14 w-full"
+                  onClick={() => {
+                    selectJourney(journey.id)
+                    navigate(`/live/${journey.id}`)
+                  }}
+                >
+                  {liveOnThisTrip || arrived ? 'Open Live Map' : 'Watch Journey Map'}
+                </Button>
               </div>
-            ) : null}
+            </div>
 
-            <WhatIfPanel journey={journey} />
-          </div>
+            {/* Right Column */}
+            <div className="mt-12 lg:mt-0 lg:col-span-7 xl:col-span-8 grid gap-12">
+              <div className="glass-well rounded-3xl p-6 md:p-8">
+                <h2 className="mb-6 text-[11px] font-bold uppercase tracking-[0.2em] text-muted">
+                  Timeline
+                </h2>
+                <JourneyTimeline journey={journey} />
+              </div>
 
-          <div className="mt-12 mb-12">
-            <Button
-              size="lg"
-              className="h-14 w-full"
-              onClick={() => {
-                selectJourney(journey.id)
-                navigate(`/live/${journey.id}`)
-              }}
-            >
-              {liveOnThisTrip || arrived ? 'Open Live Map' : 'Watch Journey Map'}
-            </Button>
+              <WhyPanel journey={journey} />
+
+              {alternatives.length ? (
+                <div className="glass-card rounded-3xl p-6 md:p-8">
+                  <h2 className="mb-6 text-[11px] font-bold uppercase tracking-[0.2em] text-ink">
+                    Alternative Routes
+                  </h2>
+                  <div className="grid gap-3">
+                    {alternatives.map((item) => (
+                      <Link
+                        key={item.id}
+                        to={`/journey/${item.id}`}
+                        onClick={() => selectJourney(item.id)}
+                        className="neu-row flex flex-wrap items-center justify-between gap-x-4 gap-y-1 rounded-lg px-5 py-4 text-sm"
+                      >
+                        <span className="font-bold text-ink">
+                          {item.tag}
+                          <span className="ml-2 font-medium text-muted">
+                            Arrives {item.arriveAt}
+                          </span>
+                        </span>
+                        <span className="font-extrabold text-accent-ink">
+                          {item.durationMin} min
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+
+              <WhatIfPanel journey={journey} />
+            </div>
+
+            <div className="mt-12 mb-12 lg:hidden">
+              <Button
+                size="lg"
+                className="h-14 w-full"
+                onClick={() => {
+                  selectJourney(journey.id)
+                  navigate(`/live/${journey.id}`)
+                }}
+              >
+                {liveOnThisTrip || arrived ? 'Open Live Map' : 'Watch Journey Map'}
+              </Button>
+            </div>
           </div>
         </div>
       </main>
